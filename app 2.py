@@ -1,10 +1,13 @@
-# we need ot add some more dependencies
-# flask-sqlalchemy for the database
-# flask-cas for CAS authentication
-# 
+
 
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+import os
+
+is_heroku = os.environ.get("IS-HEROKU", None)
+
 app = Flask(__name__)
+db = SQLAlchemy(app)
 
 @app.route("/")
 def home():
