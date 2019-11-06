@@ -1,4 +1,4 @@
-from app import app, db
+from app import app, db, mail
 from database import User
 from flask import render_template
 

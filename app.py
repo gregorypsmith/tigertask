@@ -7,6 +7,7 @@ import os
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
+from flask_mail import Mail
 
 from utils import is_heroku
 
@@ -23,5 +24,6 @@ else:
 
 db = SQLAlchemy(app)
 admin = Admin(app)
+mail = Mail(app)
 
 

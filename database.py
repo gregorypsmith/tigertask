@@ -1,6 +1,6 @@
 import os
 
-from app import db, admin
+from app import db, admin, mail
 from flask_admin.contrib.sqla import ModelView
 
 
