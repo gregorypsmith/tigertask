@@ -4,6 +4,42 @@
         <title></title>
     </head>
     <body>
-        <h1>Home Page</h1>
+        <!-- header, can modularize later -->
+        <div class="header">
+
+            <h1>TigerTask</h1>
+
+            <!-- search bar -->
+            <form method="get">
+                <table>
+                    <tr>
+                        <td> <input type="text" name="search"> </td>
+                        <td> <input type="submit" value="Search"> </td>
+                    </tr>
+                </table>
+            </form>
+
+            <!-- button links -->
+            <a href="/cart.html">Cart</a>
+            <a href="#">My orders</a>
+            <a href="/about.html">About</a>
+        </div>
+
+        <!-- categories -->
+        <div class="categories">
+            <p>Category:</p>
+            <a href="#">Toiletries</a>
+            <a href="#">Medicine</a>
+            <a href="#">Cleaning supplies</a>
+            <a href="#">Food</a>
+            <a href="#">All</a>
+        </div>
+
+        <!-- cards -->
+        <div class="card">
+            <h2>{{itemName}}</h2>
+            <p>{{itemPrice}}</p>
+            <button>Add to cart</button>
+        </div>
     </body>
 </html>
