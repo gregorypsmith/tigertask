@@ -4,8 +4,17 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 @app.route("/")
-def home():
-    return render_template('home.html')
+@app.route("/index")
+def index():
+    return render_template('index.html')
+
+@app.route("/homecustomer")
+def homecustomer():
+    return render_template('homecustomer.html')
+
+@app.route("/cart")
+def cart():
+    return render_template('cart.html')
 
 @app.route("/about")
 def about():
