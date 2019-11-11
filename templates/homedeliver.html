@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Available Deliveries</title>
+    </head>
+    <body>
+    <h1>TigerTask</h1>
+
+    <a href="/deliveries">My Deliveries</a>
+    <a href="/about">About</a>
+
+    <h2>Available deliveries:</h2>
+
+    <!--This commented out code is a jinja2 loop that allows us to display all available deliveries. It requires a 2D list with each delivery and its info-->
+
+    <!--
+        {#
+            {% if deliveries[0]|length == 0: %}
+            <p>No deliveries to display.</p>
+        {% else: %}
+    <table>
+        <tr>
+            <th> Location </th>
+            <th> Items </th>
+            <th> Price </th>
+            <th> Date Placed </th>
+            <th> Claim </th>
+        </tr>
+        
+        {%    for n in range(deliveries|length): %}
+            <tr>
+            <td>
+            {{deliveries[0][n]}}
+            </td>
+            <td>
+                {{deliveries[1][n]}}
+            </td>
+            <td>
+                {{deliveries[2][n]}}
+            </td>
+            <td>
+                {{deliveries[3][n]}}
+            </td>
+            <td>
+            <button>Claim Order</button>>
+            </td>
+            </tr>
+                        {%    endfor %}
+                    {% endif %}
+    </table>
+    #}
+-->
+<style>
+td, th {
+    padding-right: 15px;
+}
+tr {
+    padding-bottom: 10px;
+}
+</style>
+    <table>
+        <tr>
+            <th> Customer Name</th>
+            <th> Customer Contact</th>
+            <th> Location </th>
+            <th> Items </th>
+            <th> Price </th>
+            <th> Date Placed </th>
+            <th> Claim </th>
+        </tr>
+        <tr>
+            <td>Gregory Smith</td>
+            <td>215-990-7552</td>
+            <td>Wright 101</td>
+            <td><a href="/orderdetails">See More</a></td>
+            <td>$51.69</td>
+            <td>11/6/19</td>
+            <td><button>Claim now!</button></td>
+        </tr>
+    </table>
+    </body>
+</html>

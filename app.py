@@ -12,6 +12,14 @@ def index():
 def homecustomer():
     return render_template('homecustomer.html')
 
+@app.route("/homedeliver")
+def homedeliver():
+    return render_template('homedeliver.html')
+
+@app.route("/deliveries")
+def deliveries():
+    return render_template('deliveries.html')
+
 @app.route("/cart")
 def cart():
     return render_template('cart.html')
