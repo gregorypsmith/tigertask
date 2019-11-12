@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!--Bootstrap links-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="../stylesheets/style.css">
+
+    <title>TigerTask Home</title>
+</head>
+
+<body>
+    <!-- {% include 'navbar.html' %} instead -->
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+        <div class="container">
+            <!-- brand name -->
+            <a class="navbar-brand" href="#">TigerTask</a>
+
+            <!-- search form -->
+            <form class="form-inline my-2 my-md-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search">
+                <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+            </form>
+
+            <!-- collapsed menu button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- navbar items -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Browse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Orders</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="categories">
+                    <h4 class="my-4">Category</h4>
+                    <div class="list-group">
+                        <a href="#" class="list-group-item">All</a>
+                        <a href="#" class="list-group-item">Food</a>
+                        <a href="#" class="list-group-item">Kitchenware</a>
+                        <a href="#" class="list-group-item">Medicine</a>
+                        <a href="#" class="list-group-item">Toiletries</a>
+                        <a href="#" class="list-group-item">Cleaning supplies</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <h4 class="my-4">Items</h4>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Toothpaste 1</h5>
+                                <h6 class="card-subtitle">$5.00</h6>
+                                <p class="card-text">buy this it's good for your teeth</p>
+                                <button class="btn btn-primary">Add to cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Toothpaste 2</h5>
+                                <h6 class="card-subtitle">$5.00</h6>
+                                <p class="card-text">buy this it's good for your teeth</p>
+                                <button class="btn btn-primary">Add to cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Toothpaste 3</h5>
+                                <h6 class="card-subtitle">$5.00</h6>
+                                <p class="card-text">buy this it's good for your teeth</p>
+                                <button class="btn btn-primary">Add to cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Toothpaste 4</h5>
+                                <h6 class="card-subtitle">$5.00</h6>
+                                <p class="card-text">buy this it's good for your teeth</p>
+                                <button class="btn btn-primary">Add to cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Toothpaste 5</h5>
+                                <h6 class="card-subtitle">$5.00</h6>
+                                <p class="card-text">buy this it's good for your teeth</p>
+                                <button class="btn btn-primary">Add to cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Toothpaste 6</h5>
+                                <h6 class="card-subtitle">$5.00</h6>
+                                <p class="card-text">buy this it's good for your teeth</p>
+                                <button class="btn btn-primary">Add to cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
