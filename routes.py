@@ -1,6 +1,6 @@
 from app import app, db, mail
 from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
-from flask import render_template
+from flask import render_template, request, make_response
 
 @app.route("/")
 @app.route("/index")
@@ -9,7 +9,27 @@ def home():
 
 @app.route("/homecustomer")
 def homecustomer():
-    return render_template('homecustomer.html')
+    prevQuery = request.cookies.get('prevQuery')
+    
+    query = request.args.get('query')
+
+    items = Item.query.filter(Item.name.contains(query))
+
+    results = []
+    for item in items:
+        results.append({
+            "name": item.name,
+            "price": item.price,
+            "category": item.category,
+        })
+    html = render_template('homecustomer.html', 
+    items=results, 
+    prevQuery=query)
+    response = make_response(html)
+
+    response.set_cookie('prevQuery', query)
+
+    return response
 
 @app.route("/homedeliver")
 def homedeliver():

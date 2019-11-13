@@ -29,8 +29,8 @@
             <a class="navbar-brand" href="#">TigerTask</a>
 
             <!-- search form -->
-            <form class="form-inline my-2 my-md-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search">
+            <form class="form-inline my-2 my-md-0" action="/homecustomer" method="GET">
+                <input class="form-control mr-sm-2" name="query" type="search" placeholder="Search" value={{prevQuery}}>
                 <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
             </form>
 
