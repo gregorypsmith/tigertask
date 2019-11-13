@@ -9,8 +9,6 @@ def home():
 
 @app.route("/homecustomer")
 def homecustomer():
-    prevQuery = request.cookies.get('prevQuery')
-    
     query = request.args.get('query')
 
     if query is None:
@@ -29,8 +27,6 @@ def homecustomer():
     items=results, 
     prevQuery=query)
     response = make_response(html)
-
-    response.set_cookie('prevQuery', query)
 
     return response
 
