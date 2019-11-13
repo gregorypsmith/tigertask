@@ -43,4 +43,5 @@ virtualenv==16.0.0
 Werkzeug==0.15.1
 wrapt==1.11.2
 WTForms==2.2.1
+xlrd==1.2.0
 xmltodict==0.12.0
