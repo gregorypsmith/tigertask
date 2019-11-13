@@ -5,46 +5,62 @@ from flask_admin.contrib.sqla import ModelView
 
 
 class Customer(db.Model):
-	custid = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.Unicode)
-	email = db.Column(db.Unicode)
-	password = db.Column(db.Unicode)
-
-class Deliverer(db.Model):
-	delivid = db.Column(db.Integer, primary_key=True)
+	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.Unicode)
 	phone_number = db.Column(db.Unicode)
 	email = db.Column(db.Unicode)
 	password = db.Column(db.Unicode)
 
-class Cart(db.Model):
-	custid = db.Column(db.Integer, primary_key=True)
-	itemid = db.Column(db.Integer)
-	quantity = db.Column(db.Integer)
+	orders = db.relationship('Order', backref='Customer')
+	cartitems = db.relationship('CartItem', backref='Customer')
 
-class Order(db.Model):
-	orderid = db.Column(db.Integer, primary_key=True)
-	custid = db.Column(db.Integer)
-	delivid = db.Column(db.Integer)
+class Deliverer(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.Unicode)
+	phone_number = db.Column(db.Unicode)
+	email = db.Column(db.Unicode)
+	password = db.Column(db.Unicode)
 
-class OrderItem(db.Model):
-	orderid = db.Column(db.Integer, primary_key=True)
-	itemid = db.Column(db.Integer)
-	quantity = db.Column(db.Integer)
+	orders = db.relationship('Order', backref='Deliverer')
 
-class Inventory(db.Model):
-	itemid = db.Column(db.Integer, primary_key=True)
-	item_name = db.Column(db.Unicode)
+class Item(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.Unicode)
 	price = db.Column(db.Integer)
 	category = db.Column(db.Unicode)
+
+	orderitems = db.relationship('OrderItem', backref='Item')
+	cartitems = db.relationship('CartItem', backref='Item')
+
+class Order(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	custid = db.Column(db.Integer, db.ForeignKey(Customer.id))
+	delivid = db.Column(db.Integer, db.ForeignKey(Deliverer.id))
+	status = db.Column(db.Unicode)
+
+	orderitems = db.relationship('OrderItem', backref='Order')
+
+class CartItem(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	custid = db.Column(db.Integer, db.ForeignKey(Customer.id))
+	itemid = db.Column(db.Integer, db.ForeignKey(Item.id))
+	quantity = db.Column(db.Integer)
+
+class OrderItem(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	orderid = db.Column(db.Integer, db.ForeignKey(Order.id))
+	itemid = db.Column(db.Integer, db.ForeignKey(Item.id))
+	quantity = db.Column(db.Integer)
 
 
 admin.add_view(ModelView(Customer, db.session))
 admin.add_view(ModelView(Deliverer, db.session))
-admin.add_view(ModelView(Cart, db.session))
+admin.add_view(ModelView(Item, db.session))
 admin.add_view(ModelView(Order, db.session))
+admin.add_view(ModelView(CartItem, db.session))
 admin.add_view(ModelView(OrderItem, db.session))
-admin.add_view(ModelView(Inventory, db.session))
+
+
 
 db.create_all()
 
