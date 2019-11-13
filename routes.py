@@ -1,5 +1,5 @@
 from app import app, db, mail
-from database import User
+from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
 from flask import render_template
 
 @app.route("/")
