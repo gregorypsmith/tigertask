@@ -10,8 +10,9 @@ def home():
 @app.route("/homecustomer")
 def homecustomer():
     query = request.args.get('query')
+
     if query is None:
-        query = ""
+    	query = ""
 
     items = Item.query.filter(Item.name.contains(query))
 
