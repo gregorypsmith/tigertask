@@ -25,8 +25,19 @@
 </head>
 
 <body>
+    <div class="text-center">
     <h1>Create account</h1>
-    {% include 'navbar.html' %}
+    {{errorMsg}}
+    <form>
+        First Name:<br>
+        <input type="text" name="firstname" placeholder="John"> <br><br>
+        Last name: <br>
+        <input type="text" name="lastname" placeholder="Doe"> <br><br>
+        Phone Number: <br>
+        <input type="text" name="phone" placeholder="123-456-7890"> <br><br>
+        <input type="submit" Create Account>
+    </form>
+    </div>
 </body>
 
 </html>

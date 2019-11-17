@@ -9,10 +9,36 @@ def home():
 
     username = CASClient().authenticate()
 
-    exists = db.session.query(Customer.id).filter_by(email=str()).scalar() is not None
+    user = Customer.query.filter_by(email=str(username + "@princeton.edu")).first()
 
-    if not exists:
-        render_template('createaccount.html')
+    if user is None:
+        return createaccount()
+    
+    return render_template('index.html')
+
+@app.route('/createaccount')
+def createaccount():
+
+    username=CASClient().authenticate()
+
+    fname = request.args.get('firstname')
+    lname = request.args.get('lastname')
+    phone = request.args.get('phone')
+
+    if fname is None or lname is None or phone is None:
+        return render_template('createaccount.html', errorMsg="Please enter your information below.")
+
+    newcust = Customer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username + "@princeton.edu"))
+    newdeliv = Deliverer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
+    
+    #newcust = Customer()
+    #newcust.name.append(str(fname + ' ' + lname))
+    #newcust.phone_number.append(phone)
+    #newcust.email.append(str(username + "@princeton.edu"))
+    db.session.add(newcust)
+    db.session.add(newdeliv)
+    db.session.commit()
+
     return render_template('index.html')
 
 @app.route("/homecustomer")
