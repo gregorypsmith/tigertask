@@ -7,7 +7,7 @@ from CASClient import  CASClient
 @app.route("/index")
 def home():
 
-    username = CASClient().authenticate()
+    #username = CASClient().authenticate()
     return render_template('index.html')
 
 @app.route("/homecustomer")
