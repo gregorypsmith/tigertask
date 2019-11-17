@@ -1,13 +1,18 @@
 from app import app, db, mail
 from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
 from flask import render_template, request, make_response
-from CASClient import  CASClient
+from CASClient import CASClient
 
 @app.route("/")
 @app.route("/index")
 def home():
 
     username = CASClient().authenticate()
+
+    exists = db.session.query(Customer.id).filter_by(email=str()).scalar() is not None
+
+    if not exists:
+        render_template('createaccount.html')
     return render_template('index.html')
 
 @app.route("/homecustomer")
