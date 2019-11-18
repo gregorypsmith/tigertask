@@ -12,6 +12,8 @@ from flask_mail import Mail
 from utils import is_heroku
 
 app = Flask(__name__)
+import routes
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 admin = Admin(app)
@@ -26,5 +28,3 @@ if is_heroku():
 else:
     basedir = os.path.abspath(os.path.dirname(__file__))
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'tigertask.sqlite')
-
-
