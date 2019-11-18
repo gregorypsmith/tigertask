@@ -48,9 +48,12 @@
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title">{{item.name}}</h5>
-                                <h6 class="card-subtitle">{{item.price}}</h6>
-                                <button class="btn btn-primary">Add to cart</button>
+                                <form action="/homecustomer" method="GET">
+                                    <h5 class="card-title" name={{item}}>{{item.name}}</h5>
+                                    <h6 class="card-subtitle">{{item.price}}</h6>
+                                    <button class="btn btn-primary">Add to cart</button>
+                                </form>
+                                
                             </div>
                         </div>
                     </div>
