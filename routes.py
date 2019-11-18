@@ -31,10 +31,6 @@ def createaccount():
     newcust = Customer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username + "@princeton.edu"))
     newdeliv = Deliverer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
     
-    #newcust = Customer()
-    #newcust.name.append(str(fname + ' ' + lname))
-    #newcust.phone_number.append(phone)
-    #newcust.email.append(str(username + "@princeton.edu"))
     db.session.add(newcust)
     db.session.add(newdeliv)
     db.session.commit()
