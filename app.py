@@ -21,6 +21,7 @@ mail = Mail(app)
 app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 
 if is_heroku():
+    print("We are in Heroku")
     app.config["DEBUG"] = False
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 else:
