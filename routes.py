@@ -28,7 +28,7 @@ def createaccount():
     if fname is None or lname is None or phone is None:
         return render_template('createaccount.html', errorMsg="Please enter your information below.")
 
-    newcust = Customer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
+    newcust = Customer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username + "@princeton.edu"))
     newdeliv = Deliverer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
     
     #newcust = Customer()
@@ -62,8 +62,7 @@ def homecustomer():
         })
     html = render_template('homecustomer.html', 
     items=results, 
-    prevQuery=query,
-    )
+    prevQuery=query)
     response = make_response(html)
 
     return response
@@ -81,27 +80,10 @@ def deliveries():
 @app.route("/cart")
 def cart():
     username = CASClient().authenticate()
-    email = username + "@princeton.edu"
-    cust = Customer.query.filter_by(email=email).first()
-    cart_items = CartItem.query.filter_by(Customer=cust).all()
-    names = []
-    prices = []
-    quantities = []
-    for item in cart_items:
-        names.append(item.Item.name)
-        prices.append(item.Item.price)
-        quantities.append(item.quantity)
-        
-
-    return render_template('cart.html', cart=(names, prices, quantities))
+    return render_template('cart.html')
 
 
 @app.route("/about")
 def about():
     username = CASClient().authenticate()
     return render_template('about.html')
-
-@app.route("/orders")
-def orders():
-    username = CASClient().authenticate()
-    return render_template('orders.html')
