@@ -12,6 +12,8 @@ from flask_mail import Mail
 from utils import is_heroku
 
 app = Flask(__name__)
+import routes
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 admin = Admin(app)
