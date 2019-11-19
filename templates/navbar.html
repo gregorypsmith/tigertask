@@ -29,9 +29,17 @@
             <a class="navbar-brand" href="/homecustomer">TigerTask</a>
 
             <!-- search form -->
-            <form class="form-inline my-2 my-md-0" action="/homecustomer" method="GET">
+            <!-- <form class="form-inline my-2 my-md-0" action="/homecustomer" method="GET">
                 <input class="form-control mr-sm-2" name="query" type="search" placeholder="Search" value={{prevQuery}}>
                 <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+            </form> -->
+            <form class="form-inline my-2 my-md-0" action="/homecustomer" method="GET">
+                <div class="input-group">
+                    <input type="search" class="form-control" placeholder="Search" value={{prevQuery}}>
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </div>
             </form>
 
             <!-- collapsed menu button -->
