@@ -8,7 +8,6 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_mail import Mail
-from flask_heroku import Heroku
 
 from utils import is_heroku
 
@@ -22,9 +21,9 @@ mail = Mail(app)
 app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 
 if is_heroku():
-    heroku = Heroku(app)
-    #app.config["DEBUG"] = False
-    #app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+    print("We are in Heroku")
+    app.config["DEBUG"] = False
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 else:
     basedir = os.path.abspath(os.path.dirname(__file__))
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'tigertask.sqlite')
