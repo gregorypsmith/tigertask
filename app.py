@@ -1,4 +1,4 @@
-# we need ot add some more dependencies
+# we need to add some more dependencies
 # flask-sqlalchemy for the database
 # flask-cas for CAS authentication
 # 
