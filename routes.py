@@ -52,6 +52,7 @@ def homecustomer():
     results = []
     for item in items:
         results.append({
+            "id": item.id,
             "name": item.name,
             "price": item.price,
             "category": item.category,
