@@ -57,10 +57,6 @@ def homecustomer():
             "price": item.price,
             "category": item.category,
         })
-    html = render_template('homecustomer.html', 
-    items=results, 
-    prevQuery=query
-    )
 
     # add one of this item to the cartitems page
     itemid = request.args.get('added')
@@ -76,7 +72,19 @@ def homecustomer():
     else:
         item.quantity = item.quantity + 1
         db.session.commit()
+    
+    addedMsg=''
+    
+    if request.args.get('added'):
+        added = CartItem.query.filter_by(itemid=request.args.get('added')).first()
+        addeditem = Item.query.filter_by(id=added.itemid).first()
+        addedMsg = str(addeditem.name + ' successfully added to cart!')
 
+    html = render_template('homecustomer.html', 
+    items=results, 
+    prevQuery=query,
+    addedMsg=addedMsg,
+    )
 
     response = make_response(html)
 
