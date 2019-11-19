@@ -31,10 +31,6 @@ def createaccount():
     newcust = Customer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
     newdeliv = Deliverer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
     
-    #newcust = Customer()
-    #newcust.name.append(str(fname + ' ' + lname))
-    #newcust.phone_number.append(phone)
-    #newcust.email.append(str(username + "@princeton.edu"))
     db.session.add(newcust)
     db.session.add(newdeliv)
     db.session.commit()
@@ -62,8 +58,25 @@ def homecustomer():
         })
     html = render_template('homecustomer.html', 
     items=results, 
-    prevQuery=query,
+    prevQuery=query
     )
+
+    # add one of this item to the cartitems page
+    itemid = request.args.get('added')
+    cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
+
+    item = CartItem.query.filter_by(Customer=cust, itemid=itemid).first()
+
+    if item is None:
+        newitem = CartItem(custid=cust.id, itemid=itemid, quantity=int(1))
+        db.session.add(newitem)
+        db.session.commit()
+    
+    else:
+        item.quantity = item.quantity + 1
+        db.session.commit()
+
+
     response = make_response(html)
 
     return response

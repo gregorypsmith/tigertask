@@ -51,7 +51,8 @@
                                 <form action="/homecustomer" method="GET">
                                     <h5 class="card-title" name={{item}}>{{item.name}}</h5>
                                     <h6 class="card-subtitle">{{item.price}}</h6>
-                                    <button class="btn btn-primary">Add to cart</button>
+                                    <input type="hidden" name="added" value={{item.name}}>
+                                    <button class="btn btn-primary" type='submit'>Add to cart</button>
                                 </form>
                                 
                             </div>
