@@ -87,19 +87,35 @@ def cart():
     names = []
     prices = []
     quantities = []
+    total = 0
     for item in cart_items:
-        names.append(item.Item.name)
-        prices.append(item.Item.price)
+        names.append(item.name)
+        prices.append(item.price)
         quantities.append(item.quantity)
+        total += item.Item.price * item.quantity
         
 
-    return render_template('cart.html', cart=(names, prices, quantities))
+    return render_template('cart.html', cart=(names, prices, quantities), total_price=total)
 
 
 @app.route("/about")
 def about():
     username = CASClient().authenticate()
     return render_template('about.html')
+
+@app.route("/placeorder")
+def placeorder():
+    username = CASClient().authenticate()
+    email = username + "@princeton.edu"
+    cust = Customer.query.filter_by(email=email).first()
+    cart_items = CartItem.query.filter_by(Customer=cust).all()
+
+    for item in cart_items:
+        newitem = OrderItem(quantity=item.quantity, Item=item, Customer=cust)
+        db.session.add(newitem)
+        db.session.delete(item)
+        db.session.commit()
+        
 
 @app.route("/orders")
 def orders():
