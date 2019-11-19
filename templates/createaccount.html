@@ -21,22 +21,34 @@
 
     <link rel="stylesheet" href="../stylesheets/style.css">
 
-    <title>TigerTask Cart</title>
+    <title>Create an account</title>
 </head>
 
 <body>
-    <div class="text-center">
-    <h1>Create account</h1>
-    {{errorMsg}}
-    <form>
-        First Name:<br>
-        <input type="text" name="firstname" placeholder="John"> <br><br>
-        Last name: <br>
-        <input type="text" name="lastname" placeholder="Doe"> <br><br>
-        Phone Number: <br>
-        <input type="text" name="phone" placeholder="123-456-7890"> <br><br>
-        <input type="submit" Create Account>
-    </form>
+    <div class="container">
+        <div class="row justify-content-center mt-5 mb-4">
+            <h1>Create an account</h1>
+        </div>
+        <div class="row justify-content-center mb-4">
+            <h4>{{errorMsg}}</h4>
+        </div>
+        <div class="row justify-content-center text-center">
+            <form>
+                <div class="form-group mb-4">
+                    <label for="firstNameInput">First name</label>
+                    <input type="text" name="firstname" class="form-control" id="firstNameInput" placeholder="John">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="lastNameInput">Last name</label>
+                    <input type="text" name="lastname" class="form-control" id="lastNameInput" placeholder="Doe">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="phoneInput">Phone number</label>
+                    <input type="text" name="phone" class="form-control" id="phoneInput" placeholder="123-456-7890">
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Submit</button>
+            </form>
+        </div>
     </div>
 </body>
 

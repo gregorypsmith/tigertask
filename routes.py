@@ -9,7 +9,7 @@ def home():
 
     username = CASClient().authenticate()
 
-    user = Customer.query.filter_by(email=str(username + "@princeton.edu")).first()
+    user = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
 
     if user is None:
         return createaccount()
@@ -31,10 +31,6 @@ def createaccount():
     newcust = Customer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
     newdeliv = Deliverer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
     
-    #newcust = Customer()
-    #newcust.name.append(str(fname + ' ' + lname))
-    #newcust.phone_number.append(phone)
-    #newcust.email.append(str(username + "@princeton.edu"))
     db.session.add(newcust)
     db.session.add(newdeliv)
     db.session.commit()
@@ -78,10 +74,35 @@ def homecustomer():
             "price": item.price,
             "category": item.category,
         })
+
+    # add one of this item to the cartitems page
+    itemid = request.args.get('added')
+    cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
+
+    item = CartItem.query.filter_by(Customer=cust, itemid=itemid).first()
+
+    if item is None:
+        newitem = CartItem(custid=cust.id, itemid=itemid, quantity=int(1))
+        db.session.add(newitem)
+        db.session.commit()
+    
+    else:
+        item.quantity = item.quantity + 1
+        db.session.commit()
+    
+    addedMsg=''
+    
+    if request.args.get('added'):
+        added = CartItem.query.filter_by(itemid=request.args.get('added')).first()
+        addeditem = Item.query.filter_by(id=added.itemid).first()
+        addedMsg = str(addeditem.name + ' successfully added to cart!')
+
     html = render_template('homecustomer.html', 
     items=results, 
     prevQuery=query,
+    addedMsg=addedMsg,
     )
+
     response = make_response(html)
 
     return response
@@ -105,19 +126,35 @@ def cart():
     names = []
     prices = []
     quantities = []
+    total = 0
     for item in cart_items:
-        names.append(item.Item.name)
-        prices.append(item.Item.price)
+        names.append(item.name)
+        prices.append(item.price)
         quantities.append(item.quantity)
+        total += item.Item.price * item.quantity
         
 
-    return render_template('cart.html', cart=(names, prices, quantities))
+    return render_template('cart.html', cart=(names, prices, quantities), total_price=total)
 
 
 @app.route("/about")
 def about():
     username = CASClient().authenticate()
     return render_template('about.html')
+
+@app.route("/placeorder")
+def placeorder():
+    username = CASClient().authenticate()
+    email = username + "@princeton.edu"
+    cust = Customer.query.filter_by(email=email).first()
+    cart_items = CartItem.query.filter_by(Customer=cust).all()
+
+    for item in cart_items:
+        newitem = OrderItem(quantity=item.quantity, Item=item, Customer=cust)
+        db.session.add(newitem)
+        db.session.delete(item)
+        db.session.commit()
+        
 
 @app.route("/orders")
 def orders():
