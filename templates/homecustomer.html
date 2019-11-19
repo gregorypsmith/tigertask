@@ -49,9 +49,11 @@
                         <div class="card h-100">
                             <div class="card-body">
                                 <form action="/homecustomer" method="GET">
-                                    <h5 class="card-title" name={{item}}>{{item.name}}</h5>
+                                    <input type="hidden" name="item_id" value={{item.id}}/>
+                                    <input type="hidden" name="query" value="{{prevQuery}}"/>
+                                    <h5 class="card-title" >{{item.name}}</h5>
                                     <h6 class="card-subtitle">{{item.price}}</h6>
-                                    <button class="btn btn-primary">Add to cart</button>
+                                    <input type='submit' class="btn btn-primary" value="Add to cart"/>
                                 </form>
                                 
                             </div>

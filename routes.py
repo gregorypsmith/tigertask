@@ -46,6 +46,23 @@ def homecustomer():
 
     username = CASClient().authenticate()
 
+    customer = Customer.query.filter_by(email=username + "@princeton.edu").first()
+    item_id = request.args.get('item_id')
+    
+    if item_id is not None:
+        item = Item.query.get(item_id)
+        print(item)
+        print(item_id)
+
+        cart_item = CartItem.query.filter_by(Item=item, Customer=customer).first()
+        if cart_item is None:
+            cart_item = CartItem(Item=item, Customer=customer, quantity=1)
+        else:
+            cart_item.quantity += 1
+
+        db.session.add(cart_item)
+        db.session.commit()
+        
     query = request.args.get('query')
 
     if query is None:
@@ -56,6 +73,7 @@ def homecustomer():
     results = []
     for item in items:
         results.append({
+            "id": item.id,
             "name": item.name,
             "price": item.price,
             "category": item.category,
@@ -105,3 +123,7 @@ def about():
 def orders():
     username = CASClient().authenticate()
     return render_template('orders.html')
+
+@app.route("/add_to_cart", methods=["POST"])
+def addToCart():
+    username = CASClient().authenticate()
