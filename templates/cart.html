@@ -43,33 +43,14 @@
                 <h4 class="my-4">Items</h4>
                 <div class="row">
                     <div class="col-md-12 mb-4">
-                        <div class="card h-100">
+                        {% for n in range(cart[0]|length) %}
                             <div class="card-body">
-                                <h5 class="card-title">Toothpaste 1</h5>
-                                <h6 class="card-subtitle">$5.00</h6>
-                                <p class="card-text">buy this it's good for your teeth</p>
+                                <h5 class="card-title">{{cart[0][n]}}</h5>
+                                <h6 class="card-subtitle">${{cart[1][n]}}</h6>
+                                <p class="card-text">Quantity: {{cart[2][n]}}</p>
                                 <button class="btn btn-primary">Remove from cart</button>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">Toothpaste 2</h5>
-                                <h6 class="card-subtitle">$5.00</h6>
-                                <p class="card-text">buy this it's good for your teeth</p>
-                                <button class="btn btn-primary">Remove from cart</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">Toothpaste 3</h5>
-                                <h6 class="card-subtitle">$5.00</h6>
-                                <p class="card-text">buy this it's good for your teeth</p>
-                                <button class="btn btn-primary">Remove from cart</button>
-                            </div>
+                        {% endfor %}
                         </div>
                     </div>
                 </div>

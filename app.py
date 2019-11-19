@@ -1,4 +1,4 @@
-# we need ot add some more dependencies
+# we need to add some more dependencies
 # flask-sqlalchemy for the database
 # flask-cas for CAS authentication
 # 
@@ -12,7 +12,6 @@ from flask_mail import Mail
 from utils import is_heroku
 
 app = Flask(__name__)
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 admin = Admin(app)
@@ -22,8 +21,11 @@ mail = Mail(app)
 app.secret_key = b'\xcdt\x8dn\xe1\xbdW\x9d[}yJ\xfc\xa3~/'
 
 if is_heroku():
+    print("We are in Heroku")
     app.config["DEBUG"] = False
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 else:
     basedir = os.path.abspath(os.path.dirname(__file__))
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'tigertask.sqlite')
+
+
