@@ -9,7 +9,7 @@ def home():
 
     username = CASClient().authenticate()
 
-    user = Customer.query.filter_by(email=str(username + "@princeton.edu")).first()
+    user = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
 
     if user is None:
         return createaccount()
