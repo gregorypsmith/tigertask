@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+    <div class="container">
+        <!-- brand name -->
+        <a class="navbar-brand" href="/homecustomer">TigerTask</a>
+
+        <!-- search form -->
+        <form class="form-inline my-2 my-md-0" action="/homecustomer" method="GET">
+            <div class="input-group">
+                <input type="search" name="query" class="form-control" placeholder="Search" value="{{prevQuery}}">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- collapsed menu button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- navbar items -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/homecustomer">Browse</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cart">Cart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/orders">Orders</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

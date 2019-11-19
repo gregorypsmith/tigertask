@@ -1,0 +1,37 @@
+{% extends "base.html.j2" %}
+
+{% block title %}My Cart{% endblock title %}
+
+{% block content %}
+    {% include 'navbarcustomer.html.j2' %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <h4 class="my-4">Summary</h4>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Order summary</h5>
+                        <p class="card-text">Total: ${{total_price}}</p>
+                        <button class="btn btn-primary">Request delivery</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <h4 class="my-4">Items</h4>
+                <div class="row">
+                    {% for n in range(cart[0]|length) %}
+                    <div class="col-md-12 mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">{{cart[0][n]}}</h5>
+                            <h6 class="card-subtitle">${{cart[1][n]}}</h6>
+                            <p class="card-text">Quantity: {{cart[2][n]}}</p>
+                            <button class="btn btn-primary">Remove from cart</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

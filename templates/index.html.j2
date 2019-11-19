@@ -1,0 +1,18 @@
+{% extends "base.html.j2" %}
+
+{% block title %}Index{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center mt-5 mb-4">
+            <h1>Welcome to TigerTask!</h1>
+        </div>
+        <div class="row justify-content-center mb-4">
+            <h3>I'm here to:</h3>
+        </div>
+        <div class="row justify-content-center">
+            <a href="/homecustomer" class="btn btn-primary mr-3">Order items</a>
+            <a href="/homedeliver" class="btn btn-outline-primary">Deliver items</a>
+        </div>
+    </div>
+{% endblock content %}
