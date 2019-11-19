@@ -14,7 +14,7 @@ def home():
     if user is None:
         return createaccount()
     
-    return render_template('index.html.j2')
+    return render_template('index.html')
 
 @app.route('/createaccount')
 def createaccount():
@@ -26,7 +26,7 @@ def createaccount():
     phone = request.args.get('phone')
 
     if fname is None or lname is None or phone is None:
-        return render_template('createaccount.html.j2', errorMsg="Please enter your information below.")
+        return render_template('createaccount.html', errorMsg="Please enter your information below.")
 
     newcust = Customer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
     newdeliv = Deliverer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
@@ -35,7 +35,7 @@ def createaccount():
     db.session.add(newdeliv)
     db.session.commit()
 
-    return render_template('index.html.j2')
+    return render_template('index.html')
 
 @app.route("/homecustomer")
 def homecustomer():
@@ -97,7 +97,7 @@ def homecustomer():
         addeditem = Item.query.filter_by(id=added.itemid).first()
         addedMsg = str(addeditem.name + ' successfully added to cart!')
 
-    html = render_template('homecustomer.html.j2', 
+    html = render_template('homecustomer.html', 
     items=results, 
     prevQuery=query,
     addedMsg=addedMsg,
@@ -110,12 +110,12 @@ def homecustomer():
 @app.route("/homedeliver")
 def homedeliver():
     username = CASClient().authenticate()
-    return render_template('homedeliver.html.j2')
+    return render_template('homedeliver.html')
 
 @app.route("/deliveries")
 def deliveries():
     username = CASClient().authenticate()
-    return render_template('deliveries.html.j2')
+    return render_template('deliveries.html')
 
 @app.route("/cart")
 def cart():
@@ -134,13 +134,13 @@ def cart():
         total += item.Item.price * item.quantity
         
 
-    return render_template('cart.html.j2', cart=(names, prices, quantities), total_price=total)
+    return render_template('cart.html', cart=(names, prices, quantities), total_price=total)
 
 
 @app.route("/about")
 def about():
     username = CASClient().authenticate()
-    return render_template('about.html.j2')
+    return render_template('about.html')
 
 @app.route("/placeorder")
 def placeorder():
@@ -159,7 +159,7 @@ def placeorder():
 @app.route("/orders")
 def orders():
     username = CASClient().authenticate()
-    return render_template('orders.html.j2')
+    return render_template('orders.html')
 
 @app.route("/add_to_cart", methods=["POST"])
 def addToCart():
