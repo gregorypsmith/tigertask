@@ -3,43 +3,52 @@
 {% block title %}Home{% endblock title %}
 
 {% block content %}
-    {% include 'navbarcustomer.html' %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="categories">
-                    <h4 class="my-4">Category</h4>
-                    <div class="list-group">
-                        <a href="#" class="list-group-item">All</a>
-                        <a href="#" class="list-group-item">Food</a>
-                        <a href="#" class="list-group-item">Kitchenware</a>
-                        <a href="#" class="list-group-item">Medicine</a>
-                        <a href="#" class="list-group-item">Toiletries</a>
-                        <a href="#" class="list-group-item">Cleaning supplies</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-9">
-                <h4 class="my-4">Items</h4>
-                <h5 style="color: green">{{addedMsg}}</h5>
-                <div class="row">
-                    {% for item in items %}
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <form action="/homecustomer" method="GET">
-                                    <input type="hidden" name="added" value="{{item.id}}"/>
-                                    <input type="hidden" name="query" value="{{prevQuery}}"/>
-                                    <h5 class="card-title" >{{item.name}}</h5>
-                                    <h6 class="card-subtitle">{{item.price}}</h6>
-                                    <button class="btn btn-primary" type='submit'>Add to cart</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
+{% include 'navbarcustomer.html' %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="categories">
+                <h4 class="my-4">Category</h4>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">All</a>
+                    <a href="#" class="list-group-item">Food</a>
+                    <a href="#" class="list-group-item">Kitchenware</a>
+                    <a href="#" class="list-group-item">Medicine</a>
+                    <a href="#" class="list-group-item">Toiletries</a>
+                    <a href="#" class="list-group-item">Cleaning supplies</a>
                 </div>
             </div>
         </div>
+        <div class="col-md-9">
+            <h4 class="my-4">Items</h4>
+            <h5 style="color: green">{{addedMsg}}</h5>
+            <div class="row">
+                {% for item in items %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <form action="/homecustomer" method="GET">
+                                <input type="hidden" name="added" value="{{item.id}}" />
+                                <input type="hidden" name="query" value="{{prevQuery}}" />
+                                <h5 class="card-title">{{item.name}}</h5>
+                                <h6 class="card-subtitle">${{item.price}}</h6>
+                                <div class="form-group">
+                                    <select class="form-control" name="quantity">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" type='submit'>Add to cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
+</div>
 {% endblock content %}
