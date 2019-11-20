@@ -192,4 +192,14 @@ def placeorder():
 @app.route("/orders")
 def orders():
     username = CASClient().authenticate()
-    return render_template('orders.html')
+    
+    customer = Customer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
+
+    orders = Order.query.filter_by(Customer=customer).all()
+    result = []
+    for order in orders:
+        result.append({
+            "customer": order.Customer.name,
+            "deliverer": order.Deliverer.name
+        })
+    return render_template('orders.html', orders=result)
