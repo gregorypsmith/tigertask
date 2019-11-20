@@ -20,12 +20,12 @@
             <div class="col-md-9">
                 <h4 class="my-4">Items</h4>
                 <div class="row">
-                    {% for n in range(cart[0]|length) %}
+                    {% for item in cart %}
                     <div class="col-md-12 mb-4">
                         <div class="card-body">
-                            <h5 class="card-title">{{cart[0][n]}}</h5>
-                            <h6 class="card-subtitle">${{cart[1][n]}}</h6>
-                            <p class="card-text">Quantity: {{cart[2][n]}}</p>
+                            <h5 class="card-title">{{item.name}}</h5>
+                            <h6 class="card-subtitle">${{item.price}}</h6>
+                            <p class="card-text">Quantity: {{item.quantity}}</p>
                             <button class="btn btn-primary">Remove from cart</button>
                         </div>
                     </div>

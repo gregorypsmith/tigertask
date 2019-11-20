@@ -60,6 +60,15 @@ def homecustomer():
 
     # add one of this item to the cartitems page
     itemid = request.args.get('added')
+    if itemid is None:
+        html = render_template('homecustomer.html', 
+        items=results, 
+        prevQuery=query,
+        addedMsg='',
+        )
+        response = make_response(html)
+        return response
+        
     cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
 
     item = CartItem.query.filter_by(Customer=cust, itemid=itemid).first()
@@ -105,24 +114,27 @@ def cart():
 
     username = CASClient().authenticate()
 
-    email = username + "@princeton.edu"
+    email = username.strip() + "@princeton.edu"
     cust = Customer.query.filter_by(email=email).first()
+
     cart_items = CartItem.query.filter_by(Customer=cust).all()
 
-    names = []
-    prices = []
-    quantities = []
+    results = []
     total = 0
-
     for cart_item in cart_items:
         item = Item.query.filter_by(id=cart_item.itemid).first()
-        names.append(item.name)
-        prices.append(item.price)
-        quantities.append(cart_item.quantity)
-        total += item.price * item.quantity
+        results.append({
+            "id": item.id,
+            "name": item.name,
+            "price": item.price,
+            "category": item.category,
+            "quantity": cart_item.quantity
+        })
+        print('appended')
+        total += item.price * cart_item.quantity
         
 
-    return render_template('cart.html', cart=(names, prices, quantities), total_price=total)
+    return render_template('cart.html', cart=results, total_price=total)
 
 
 @app.route("/about")
