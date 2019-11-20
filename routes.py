@@ -130,10 +130,16 @@ def cart():
     email = username.strip() + "@princeton.edu"
     cust = Customer.query.filter_by(email=email).first()
 
+    removed_id = request.args.get('removed_id')
+    if removed_id is not None:
+        removed_cart_item = CartItem.query.filter_by(Customer=cust, itemid=removed_id).first()
+        db.session.delete(removed_cart_item)
+        db.session.commit()
+
     cart_items = CartItem.query.filter_by(Customer=cust).all()
 
     results = []
-    total = 0
+    subtotal = 0
     for cart_item in cart_items:
         item = Item.query.filter_by(id=cart_item.itemid).first()
         results.append({
@@ -144,10 +150,18 @@ def cart():
             "quantity": cart_item.quantity
         })
         print('appended')
-        total += item.price * cart_item.quantity
-        
+        subtotal += item.price * cart_item.quantity
+    
+    fee = 0
+    if subtotal > 0:
+        fee = 1.99
+    if subtotal > 10:
+        fee = 2.99
+    if subtotal > 25:
+        fee = 3.99
+    total = subtotal + fee
 
-    return render_template('cart.html', cart=results, total_price=total)
+    return render_template('cart.html', cart=results, subtotal=subtotal, fee=fee, total=total)
 
 
 @app.route("/about")
