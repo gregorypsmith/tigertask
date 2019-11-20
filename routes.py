@@ -41,23 +41,6 @@ def createaccount():
 def homecustomer():
 
     username = CASClient().authenticate()
-
-    customer = Customer.query.filter_by(email=username + "@princeton.edu").first()
-    item_id = request.args.get('item_id')
-    
-    if item_id is not None:
-        item = Item.query.get(item_id)
-        print(item)
-        print(item_id)
-
-        cart_item = CartItem.query.filter_by(Item=item, Customer=customer).first()
-        if cart_item is None:
-            cart_item = CartItem(Item=item, Customer=customer, quantity=1)
-        else:
-            cart_item.quantity += 1
-
-        db.session.add(cart_item)
-        db.session.commit()
         
     query = request.args.get('query')
 
@@ -119,19 +102,24 @@ def deliveries():
 
 @app.route("/cart")
 def cart():
+
     username = CASClient().authenticate()
+
     email = username + "@princeton.edu"
     cust = Customer.query.filter_by(email=email).first()
     cart_items = CartItem.query.filter_by(Customer=cust).all()
+
     names = []
     prices = []
     quantities = []
     total = 0
-    for item in cart_items:
+
+    for cart_item in cart_items:
+        item = Item.query.filter_by(id=cart_item.itemid).first()
         names.append(item.name)
         prices.append(item.price)
-        quantities.append(item.quantity)
-        total += item.Item.price * item.quantity
+        quantities.append(cart_item.quantity)
+        total += item.price * item.quantity
         
 
     return render_template('cart.html', cart=(names, prices, quantities), total_price=total)
@@ -160,7 +148,3 @@ def placeorder():
 def orders():
     username = CASClient().authenticate()
     return render_template('orders.html')
-
-@app.route("/add_to_cart", methods=["POST"])
-def addToCart():
-    username = CASClient().authenticate()
