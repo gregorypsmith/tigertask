@@ -154,7 +154,7 @@ def placeorder():
     db.session.commit()
 
     for item in cart_items:
-        newitem = OrderItem(quantity=item.quantity, itemid=item.id, Order=order)
+        newitem = OrderItem(quantity=item.quantity, itemid=item.itemid, Order=order)
         db.session.add(newitem)
         db.session.delete(item)
         db.session.commit()
