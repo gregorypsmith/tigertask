@@ -186,8 +186,19 @@ def placeorder():
         db.session.delete(item)
         db.session.commit()
 
-    return render_template('orders.html')
+    orders = Order.query.filter_by(Customer=cust).all()
+    result = []
+    for order in orders:
         
+        if order.Deliverer is None:
+            deliverer = "None"
+        else:
+            deliverer = order.Deliverer.name
+        result.append({
+            "customer": order.Customer.name,
+            "deliverer": deliverer
+        })
+    return render_template('orders.html', orders=result)
 
 @app.route("/orders")
 def orders():
