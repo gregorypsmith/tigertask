@@ -13,7 +13,9 @@
                     <div class="card-body">
                         <form action="/placeorder" method="GET">
                             <h5 class="card-title">Order summary</h5>
-                            <p class="card-text">Total: ${{total_price}}</p>
+                            <p class="card-text">Subtotal: ${{subtotal}}</p>
+                            <p class="card-text">Delivery Fee: ${{fee}}</p>
+                            <p class="card-text">Total: ${{total}}</p>
                             <button class="btn btn-primary" type='submit'>Request delivery</button>
                         </form>
                     </div>
@@ -25,10 +27,13 @@
                     {% for item in cart %}
                     <div class="col-md-12 mb-4">
                         <div class="card-body">
+                            <form action="/cart" method="GET">
                             <h5 class="card-title">{{item.name}}</h5>
                             <h6 class="card-subtitle">${{item.price}}</h6>
                             <p class="card-text">Quantity: {{item.quantity}}</p>
-                            <button class="btn btn-primary">Remove from cart</button>
+                            <input type="hidden" name="removed_id" value="{{item.id}}"/>
+                            <button class="btn btn-primary" type='submit'>Remove from cart</button>
+                            </form>
                         </div>
                     </div>
                     {% endfor %}
