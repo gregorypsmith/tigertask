@@ -144,16 +144,22 @@ def about():
 
 @app.route("/placeorder")
 def placeorder():
+
     username = CASClient().authenticate()
-    email = username + "@princeton.edu"
-    cust = Customer.query.filter_by(email=email).first()
+    cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
     cart_items = CartItem.query.filter_by(Customer=cust).all()
 
+    order = Order(Customer=cust, status="Waiting for deliverer")
+    db.session.add(order)
+    db.session.commit()
+
     for item in cart_items:
-        newitem = OrderItem(quantity=item.quantity, Item=item, Customer=cust)
+        newitem = OrderItem(quantity=item.quantity, itemid=item.id, Order=order)
         db.session.add(newitem)
         db.session.delete(item)
         db.session.commit()
+
+    return render_template('orders.html')
         
 
 @app.route("/orders")
