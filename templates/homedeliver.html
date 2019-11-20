@@ -61,7 +61,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for order in orders %}
                     <tr>
                         <td>Gregory Smith</td>
                         <td>215-990-7552</td>
@@ -69,14 +68,8 @@
                         <td><a href="/orderdetails">See More</a></td>
                         <td>$51.69</td>
                         <td>11/6/19</td>
-                        <td>
-                            <form action="/homedeliver" method="GET">
-                                <input type="hidden" name="claimed" value="{{order.id}}"/>
-                                <button class="btn btn-primary" type='submit'>Claim now!</button>
-                            </form>
-                        </td>
+                        <td><button class="btn btn-primary">Claim now!</button></td>
                     </tr>
-                    {% endfor %}
                 </tbody>
             </table>
         </div>
