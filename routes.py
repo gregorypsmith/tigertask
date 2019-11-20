@@ -58,8 +58,9 @@ def homecustomer():
             "category": item.category,
         })
 
-    # add one of this item to the cartitems page
+    # add this item to the cartitems page
     itemid = request.args.get('added')
+    quant = request.args.get('quantity')
     if itemid is None:
         html = render_template('homecustomer.html', 
         items=results, 
@@ -74,12 +75,12 @@ def homecustomer():
     item = CartItem.query.filter_by(Customer=cust, itemid=itemid).first()
 
     if item is None:
-        newitem = CartItem(custid=cust.id, itemid=itemid, quantity=int(1))
+        newitem = CartItem(custid=cust.id, itemid=itemid, quantity=quant)
         db.session.add(newitem)
         db.session.commit()
     
     else:
-        item.quantity = item.quantity + 1
+        item.quantity = item.quantity + int(quant)
         db.session.commit()
     
     addedMsg=''
@@ -186,8 +187,19 @@ def placeorder():
         db.session.delete(item)
         db.session.commit()
 
-    return render_template('orders.html')
+    orders = Order.query.filter_by(Customer=cust).all()
+    result = []
+    for order in orders:
         
+        if order.Deliverer is None:
+            deliverer = "None"
+        else:
+            deliverer = order.Deliverer.name
+        result.append({
+            "customer": order.Customer.name,
+            "deliverer": deliverer
+        })
+    return render_template('orders.html', orders=result)
 
 @app.route("/orders")
 def orders():
