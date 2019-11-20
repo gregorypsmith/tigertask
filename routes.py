@@ -140,6 +140,7 @@ def cart():
 
     results = []
     subtotal = 0
+    fee = 0
     for cart_item in cart_items:
         item = Item.query.filter_by(id=cart_item.itemid).first()
         results.append({
@@ -151,14 +152,13 @@ def cart():
         })
         print('appended')
         subtotal += item.price * cart_item.quantity
+        if subtotal > 0:
+            fee = 1.99
+        if subtotal > 10:
+            fee = 2.99
+        if subtotal > 25:
+            fee = 3.99
     
-    fee = 0
-    if subtotal > 0:
-        fee = 1.99
-    if subtotal > 10:
-        fee = 2.99
-    if subtotal > 25:
-        fee = 3.99
     total = subtotal + fee
 
     return render_template('cart.html', cart=results, subtotal=subtotal, fee=fee, total=total)
