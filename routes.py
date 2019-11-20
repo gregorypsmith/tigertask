@@ -107,6 +107,19 @@ def homedeliver():
 @app.route("/deliveries")
 def deliveries():
     username = CASClient().authenticate()
+    # cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
+
+    # orders = Order.query.filter_by(status="Waiting for deliverer").all()
+
+    # results = []
+    # for order in orders:
+    #     cust = Customer.query.filter_by(id=order.custid).first()
+    #     results.append({
+    #         "name": cust.name,
+    #         "email"
+    #         "category": item.category,
+    #    })
+
     return render_template('deliveries.html')
 
 @app.route("/cart")
