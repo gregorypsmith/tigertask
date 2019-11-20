@@ -11,9 +11,11 @@
                 <h4 class="my-4">Summary</h4>
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Order summary</h5>
-                        <p class="card-text">Total: ${{total_price}}</p>
-                        <button class="btn btn-primary">Request delivery</button>
+                        <form action="/placeorder" method="GET">
+                            <h5 class="card-title">Order summary</h5>
+                            <p class="card-text">Total: ${{total_price}}</p>
+                            <button class="btn btn-primary" type='submit'>Request delivery</button>
+                        </form>
                     </div>
                 </div>
             </div>
