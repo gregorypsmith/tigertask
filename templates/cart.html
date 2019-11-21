@@ -3,42 +3,78 @@
 {% block title %}My Cart{% endblock title %}
 
 {% block content %}
-    {% include 'navbarcustomer.html' %}
+{% include 'navbarcustomer.html' %}
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <h4 class="my-4">Summary</h4>
-                <div class="card">
-                    <div class="card-body">
-                        <form action="/placeorder" method="GET">
-                            <h5 class="card-title">Order summary</h5>
-                            <p class="card-text">Subtotal: ${{subtotal}}</p>
-                            <p class="card-text">Delivery Fee: ${{fee}}</p>
-                            <p class="card-text">Total: ${{total}}</p>
-                            <button class="btn btn-primary" type='submit'>Request delivery</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-9">
-                <h4 class="my-4">Items</h4>
-                <div class="row">
-                    {% for item in cart %}
-                    <div class="col-md-12 mb-4">
-                        <div class="card-body">
-                            <form action="/cart" method="GET">
-                            <h5 class="card-title">{{item.name}}</h5>
-                            <h6 class="card-subtitle">${{item.price}}</h6>
-                            <p class="card-text">Quantity: {{item.quantity}}</p>
-                            <input type="hidden" name="removed_id" value="{{item.id}}"/>
-                            <button class="btn btn-primary" type='submit'>Remove from cart</button>
-                            </form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <h4 class="my-4">Summary</h4>
+            <div class="card">
+                <div class="card-body">
+                    <form action="/placeorder" method="GET">
+                        <h5 class="card-title">Order summary</h5>
+                        <div class="card-text">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <td scope="row">Subtotal:</td>
+                                        <td>${{subtotal}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">Delivery Fee:</th>
+                                        <td>${{fee}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">Total:</th>
+                                        <td>${{total}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                    {% endfor %}
+
+                        <h5 class="card-title">Deliver to</h5>
+                        <!-- building name form -->
+                        <div class="form-group">
+                            <select class="form-control" name="building" placeholder="test">
+                                <option disabled selected>Building</option>
+                                {% for building in buildings %}
+                                <option value="{{building}}">{{building}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <!-- room number form -->
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="roomnum" placeholder="Room number">
+                        </div>
+                        <!-- customer notes form -->
+                        <div class="form-group">
+                            <textarea class="form-control" name="note" rows="3"
+                                placeholder="Additional notes"></textarea>
+                        </div>
+
+                        <button class="btn btn-primary" type='submit'>Request delivery</button>
+                    </form>
                 </div>
             </div>
         </div>
+        <div class="col-md-9">
+            <h4 class="my-4">Items</h4>
+            <div class="row">
+                {% for item in cart %}
+                <div class="col-md-12 mb-4">
+                    <div class="card-body">
+                        <form action="/cart" method="GET">
+                            <h5 class="card-title">{{item.name}}</h5>
+                            <h6 class="card-subtitle">${{item.price}}</h6>
+                            <p class="card-text">Quantity: {{item.quantity}}</p>
+                            <input type="hidden" name="removed_id" value="{{item.id}}" />
+                            <button class="btn btn-primary" type='submit'>Remove from cart</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
+</div>
 {% endblock content %}
