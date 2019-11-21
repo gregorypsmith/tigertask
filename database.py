@@ -34,6 +34,9 @@ class Order(db.Model):
 	custid = db.Column(db.Integer, db.ForeignKey(Customer.id))
 	delivid = db.Column(db.Integer, db.ForeignKey(Deliverer.id))
 	status = db.Column(db.Unicode)
+	building = db.Column(db.Unicode)
+	roomnum = db.Column(db.Unicode)
+	note = db.Column(db.Unicode)
 
 	orderitems = db.relationship('OrderItem', backref='Order')
 
@@ -57,9 +60,8 @@ admin.add_view(ModelView(Order, db.session))
 admin.add_view(ModelView(CartItem, db.session))
 admin.add_view(ModelView(OrderItem, db.session))
 
-
-
-db.create_all()
+if __name__ == '__main__':
+	db.create_all()
 
 
 

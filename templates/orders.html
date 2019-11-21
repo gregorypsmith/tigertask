@@ -26,7 +26,12 @@
                                 <h5 class="card-title">ORDER</h5>
                                 <h6 class="card-subtitle">{{order.deliverer}}</h6>
                                 <p class="card-text">{{order.customer}}</p>
-                                <button class="btn btn-primary">Cancel order</button>
+                                <button class="btn btn-primary" style='margin-bottom: 10px'>Cancel order</button>
+                                <form action='/orders'>
+                                    <input type='hidden' name='delivered' value=True>
+                                    <input type='hidden' name='delivered_id' value={{order.id}}>
+                                    <button class="btn btn-primary" style="background-color:green" type='submit'>Delivered</button>
+                                </form>
                             </div>
                         </div>
                     </div>

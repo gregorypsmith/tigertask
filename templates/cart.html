@@ -37,25 +37,18 @@
                         <div class="form-group">
                             <select class="form-control" name="building" placeholder="test">
                                 <option disabled selected>Building</option>
-
-                                <!-- examples; better to just send all options from the backend -->
-                                <option value="Bloomberg">Bloomberg</option>
-                                <option value="Yoseloff">Yoseloff</option>
-                                <option value="1903">1903</option>
-                                <option value="Wright">Wright</option>
-                                <option value="Frist">Frist</option>
-
-                                <!-- placeholder example -->
-                                <!-- <option value="{{buildingName}}">{{buildingName}}</option> -->
+                                {% for building in buildings %}
+                                <option value="{{building}}">{{building}}</option>
+                                {% endfor %}
                             </select>
                         </div>
                         <!-- room number form -->
                         <div class="form-group">
-                            <input type="text" class="form-control" name="roomNum" placeholder="Room number">
+                            <input type="text" class="form-control" name="roomnum" placeholder="Room number">
                         </div>
                         <!-- customer notes form -->
                         <div class="form-group">
-                            <textarea class="form-control" name="customerNote" rows="3"
+                            <textarea class="form-control" name="note" rows="3"
                                 placeholder="Additional notes"></textarea>
                         </div>
 

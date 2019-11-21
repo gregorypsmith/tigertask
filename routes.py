@@ -43,11 +43,16 @@ def homecustomer():
     username = CASClient().authenticate()
         
     query = request.args.get('query')
+    category = request.args.get('category')
 
     if query is None:
     	query = ""
 
-    items = Item.query.filter(Item.name.contains(query))
+    items = Item.query.filter(Item.name.contains(query)).all()
+
+    if category is not None:
+        if category != 'All':
+            items = Item.query.filter(Item.name.contains(query)).filter_by(category=category).all()
 
     results = []
     for item in items:
@@ -151,7 +156,6 @@ def cart():
             "category": item.category,
             "quantity": cart_item.quantity
         })
-        print('appended')
         subtotal += item.price * cart_item.quantity
         if subtotal > 0:
             fee = 1.99
@@ -162,7 +166,15 @@ def cart():
     
     total = subtotal + fee
 
-    return render_template('cart.html', cart=results, subtotal=subtotal, fee=fee, total=total)
+    buildfile = open(r"buildings.txt", "r")
+    buildings = []
+    building = buildfile.readline()
+    while building is not '':
+        buildings.append(building)
+        building = buildfile.readline()
+    buildfile.close()
+
+    return render_template('cart.html', cart=results, subtotal=subtotal, fee=fee, total=total, buildings=buildings)
 
 
 @app.route("/about")
@@ -177,7 +189,11 @@ def placeorder():
     cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
     cart_items = CartItem.query.filter_by(Customer=cust).all()
 
-    order = Order(Customer=cust, status="Waiting for deliverer")
+    building = request.args.get('building')
+    roomnum = request.args.get('roomnum')
+    note = request.args.get('note')
+
+    order = Order(Customer=cust, status="Waiting for deliverer", building=building, roomnum=roomnum, note=note)
     db.session.add(order)
     db.session.commit()
 
@@ -210,8 +226,24 @@ def orders():
     orders = Order.query.filter_by(Customer=customer).all()
     result = []
     for order in orders:
+        deliverer = ''
+        if deliverer:
+            deliverer = order.Deliverer.name
         result.append({
+            "id": order.id,
             "customer": order.Customer.name,
-            "deliverer": order.Deliverer.name
+            "deliverer": deliverer
         })
+    
+    delivered = request.args.get('delivered')
+    if delivered:
+        print(delivered)
+        if delivered == 'True':
+            deliv_id = request.args.get('delivered_id')
+            print(deliv_id)
+            delivered = Order.query.filter_by(id=deliv_id).first()
+            delivered.status = 'Delivered'
+            db.session.commit()
+
+
     return render_template('orders.html', orders=result)
