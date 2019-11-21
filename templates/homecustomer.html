@@ -7,19 +7,37 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <div class="categories">
+            <!-- category list group -->
+            <div class="d-none d-sm-block">
                 <h4 class="my-4">Category</h4>
                 <form action="/homecustomer" name='category'>
-                <div class="list-group">
-                    <a href="/homecustomer?category=All" class="list-group-item">All</a>
-                    <a href="/homecustomer?category=Food" class="list-group-item">Food</a>
-                    <a href="/homecustomer?category=Kitchenware" class="list-group-item">Kitchenware</a>
-                    <a href="/homecustomer?category=Medicine" class="list-group-item">Medicine</a>
-                    <a href="/homecustomer?category=Toiletries" class="list-group-item">Toiletries</a>
-                    <a href="/homecustomer?category=Cleaning" class="list-group-item">Cleaning supplies</a>
-                    <a href="/homecustomer?category=School" class="list-group-item">School supplies</a>
-                </div>
+                    <div class="list-group">
+                        <a href="/homecustomer?category=All" class="list-group-item">All</a>
+                        <a href="/homecustomer?category=Food" class="list-group-item">Food</a>
+                        <a href="/homecustomer?category=Kitchenware" class="list-group-item">Kitchenware</a>
+                        <a href="/homecustomer?category=Medicine" class="list-group-item">Medicine</a>
+                        <a href="/homecustomer?category=Toiletries" class="list-group-item">Toiletries</a>
+                        <a href="/homecustomer?category=Cleaning" class="list-group-item">Cleaning supplies</a>
+                        <a href="/homecustomer?category=School" class="list-group-item">School supplies</a>
+                    </div>
                 </form>
+            </div>
+            <!-- category dropdown -->
+            <div class="dropdown d-block d-sm-none mt-3">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Category
+                </button>
+                <div class="dropdown-menu">
+                    <form action="/homecustomer" name='category'>
+                        <a href="/homecustomer?category=All" class="dropdown-item">All</a>
+                        <a href="/homecustomer?category=Food" class="dropdown-item">Food</a>
+                        <a href="/homecustomer?category=Kitchenware" class="dropdown-item">Kitchenware</a>
+                        <a href="/homecustomer?category=Medicine" class="dropdown-item">Medicine</a>
+                        <a href="/homecustomer?category=Toiletries" class="dropdown-item">Toiletries</a>
+                        <a href="/homecustomer?category=Cleaning" class="dropdown-item">Cleaning supplies</a>
+                        <a href="/homecustomer?category=School" class="dropdown-item">School supplies</a>
+                    </form>
+                </div>
             </div>
         </div>
         <div class="col-md-9">
