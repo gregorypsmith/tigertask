@@ -56,20 +56,27 @@
                         <th scope="col">Location </th>
                         <th scope="col">Items </th>
                         <th scope="col">Price </th>
-                        <th scope="col">Date Placed </th>
+                        <th scope="col">Time Placed </th>
                         <th scope="col">Claim </th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for result in results %}
                     <tr>
-                        <td>Gregory Smith</td>
-                        <td>215-990-7552</td>
-                        <td>Wright 101</td>
+                        <td>{{result.name}}</td>
+                        <td>{{result.phone_number}}</td>
+                        <td>{{result.building}} {{result.roomnum}}</td>
                         <td><a href="/orderdetails">See More</a></td>
-                        <td>$51.69</td>
-                        <td>11/6/19</td>
-                        <td><button class="btn btn-primary">Claim now!</button></td>
+                        <td>${{result.price}}</td>
+                        <td>{{result.time_placed}}</td>
+                        <td>
+                            <form action="/homedeliver" method="GET">
+                                <input type="hidden" name="claimed_id" value="{{result.id}}" />
+                                <button class="btn btn-primary" type='submit'>Claim now!</button>
+                            </form>
+                        </td>
                     </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

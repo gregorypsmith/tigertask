@@ -108,23 +108,35 @@ def homecustomer():
 @app.route("/homedeliver")
 def homedeliver():
     username = CASClient().authenticate()
-    return render_template('homedeliver.html')
+    deliv = Deliverer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
+
+    claimed_id = request.args.get('claimed')
+    if claimed_id is not None:
+        order = Order.query.filter_by(id=claimed_id).first()
+        order.status = "Being delivered"
+        order.Deliverer = deliv
+        db.session.commit()
+
+    orders = Order.query.filter_by(status="Waiting for deliverer").all()
+
+    results = []
+    for order in orders:
+        cust = Customer.query.filter_by(id=order.custid).first()
+        results.append({
+            "id": order.id,
+            "name": cust.name,
+            "phone_number": cust.phone_number,
+            "building": order.building,
+            "roomnum": order.roomnum,
+            "price": order.price,
+            "time_placed": order.time_placed,
+        })
+
+    return render_template('homedeliver.html', results=results)
 
 @app.route("/deliveries")
 def deliveries():
     username = CASClient().authenticate()
-    # cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
-
-    # orders = Order.query.filter_by(status="Waiting for deliverer").all()
-
-    # results = []
-    # for order in orders:
-    #     cust = Customer.query.filter_by(id=order.custid).first()
-    #     results.append({
-    #         "name": cust.name,
-    #         "email"
-    #         "category": item.category,
-    #    })
 
     return render_template('deliveries.html')
 

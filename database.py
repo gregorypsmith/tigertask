@@ -37,6 +37,8 @@ class Order(db.Model):
 	building = db.Column(db.Unicode)
 	roomnum = db.Column(db.Unicode)
 	note = db.Column(db.Unicode)
+	price = db.Column(db.Integer)
+	time_placed = db.Column(db.Unicode)
 
 	orderitems = db.relationship('OrderItem', backref='Order')
 
