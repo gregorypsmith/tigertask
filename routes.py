@@ -304,7 +304,24 @@ def claimorder():
         order.Deliverer = deliv
         db.session.commit()
 
-    return render_template('deliveries.html')
+
+    orders = Order.query.filter_by(status="Waiting for Deliverer").all()
+
+    results = []
+    for order in orders:
+        cust = Customer.query.filter_by(id=order.custid).first()
+        results.append({
+            "id": order.id,
+            "name": order.Customer.name,
+            "phone_number": cust.phone_number,
+            "building": order.building,
+            "roomnum": order.roomnum,
+            "price": order.price,
+            "time_placed": order.time_placed,
+            "status": order.status,
+        })
+
+    return render_template('deliveries.html', results=results)
 
 @app.route("/orders")
 def orders():

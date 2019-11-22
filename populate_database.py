@@ -14,7 +14,7 @@ def populate_database():
     wb = xlrd.open_workbook(loc)
     sheet = wb.sheet_by_index(0)
     try:
-        for i in range(sheet.nrows):
+        for i in range(1,sheet.nrows):
             #print(sheet.cell_value(i, 0))
 
             item_to_add = Item(
