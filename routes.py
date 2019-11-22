@@ -255,6 +255,24 @@ def placeorder():
         db.session.delete(item)
         db.session.commit()
 
+    delivered = request.args.get('delivered')
+    if delivered:
+        print(delivered)
+        if delivered == 'True':
+            deliv_id = request.args.get('delivered_id')
+            print(deliv_id)
+            delivered = Order.query.filter_by(id=deliv_id).first()
+            delivered.status = 'Delivered'
+            db.session.commit()
+
+    canceled = request.args.get('canceled')
+    if canceled is not None:
+        removed_order = Order.query.filter_by(id=canceled).first()
+        if removed_order is not None:
+            print("removing order")
+            db.session.delete(removed_order)
+            db.session.commit()
+
     orders = Order.query.filter_by(Customer=cust).all()
     result = []
     for order in orders:
