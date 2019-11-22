@@ -23,24 +23,17 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for result in results %}
                     <tr>
-                        <td>Gregory Smith</td>
-                        <td>215-990-7552</td>
-                        <td>Wright 101</td>
+                        <td>{{result.name}}</td>
+                        <td>{{result.phone_number}}</td>
+                        <td>{{result.building}} {{result.roomnum}}</td>
                         <td><a href="/orderdetails">See More</a></td>
-                        <td>$51.69</td>
-                        <td>11/6/19</td>
-                        <td>Not Delivered</td>
+                        <td>${{result.price}}</td>
+                        <td>{{result.time_placed}}</td>
+                        <td>{{result.status}}</td>
                     </tr>
-                    <tr>
-                        <td>Bob</td>
-                        <td> 123-456-7890</td>
-                        <td>Bloomberg 342</td>
-                        <td><a href="/orderdetails">See More</a></td>
-                        <td>$7.89</td>
-                        <td>11/9/19</td>
-                        <td>Delivered</td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

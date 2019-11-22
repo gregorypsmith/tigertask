@@ -112,13 +112,6 @@ def homedeliver():
     username = CASClient().authenticate()
     deliv = Deliverer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
 
-    claimed_id = request.args.get('claimed')
-    if claimed_id is not None:
-        order = Order.query.filter_by(id=claimed_id).first()
-        order.status = "Being delivered"
-        order.Deliverer = deliv
-        db.session.commit()
-
     orders = Order.query.filter_by(status="Waiting for deliverer").all()
 
     results = []
@@ -139,8 +132,24 @@ def homedeliver():
 @app.route("/deliveries")
 def deliveries():
     username = CASClient().authenticate()
+    deliv = Deliverer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
+    orders = Order.query.filter_by(Deliverer=deliv).all()
 
-    return render_template('deliveries.html')
+    results = []
+    for order in orders:
+        cust = Customer.query.filter_by(id=order.custid).first()
+        results.append({
+            "id": order.id,
+            "name": order.Customer.name,
+            "phone_number": cust.phone_number,
+            "building": order.building,
+            "roomnum": order.roomnum,
+            "price": order.price,
+            "time_placed": order.time_placed,
+            "status": order.status,
+        })
+
+    return render_template('deliveries.html', results=results)
 
 @app.route("/cart")
 def cart():
@@ -261,7 +270,8 @@ def claimorder():
     order = Order.query.filter_by(id=id).first()
 
     if order is not None:
-        order.status = "Claimed"
+        order.status = "Being delivered"
+        order.Deliverer = deliv
         db.session.commit()
 
     return render_template('deliveries.html')
