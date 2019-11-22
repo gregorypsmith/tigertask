@@ -4,6 +4,9 @@ from flask import render_template, request, make_response
 from CASClient import CASClient
 from datetime import datetime
 
+BEING_DELIVERED = "Being Delivered"
+DELIVERED = "Delivered"
+WAITING = "Waiting for Deliverer"
 
 @app.route("/")
 @app.route("/index")
@@ -162,8 +165,9 @@ def cart():
     removed_id = request.args.get('removed_id')
     if removed_id is not None:
         removed_cart_item = CartItem.query.filter_by(Customer=cust, itemid=removed_id).first()
-        db.session.delete(removed_cart_item)
-        db.session.commit()
+        if removed_cart_item:
+            db.session.delete(removed_cart_item)
+            db.session.commit()
 
     cart_items = CartItem.query.filter_by(Customer=cust).all()
 
@@ -222,6 +226,7 @@ def placeorder():
         if item is not None:
             subtotal += item.price * cart_item.quantity
 
+        fee = 0
         if subtotal > 0:
             fee = 1.99
         if subtotal > 10:
@@ -237,7 +242,7 @@ def placeorder():
     now = datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 
-    order = Order(Customer=cust, status="Waiting for deliverer", building=building, roomnum=roomnum, note=note, price=total, time_placed=dt_string)
+    order = Order(Customer=cust, status="Waiting for Deliverer", building=building, roomnum=roomnum, note=note, price=total, time_placed=dt_string)
     db.session.add(order)
     db.session.commit()
 
@@ -256,8 +261,10 @@ def placeorder():
         else:
             deliverer = order.Deliverer.name
         result.append({
+            "id": order.id,
             "customer": order.Customer.name,
-            "deliverer": deliverer
+            "deliverer": deliverer,
+            "status": order.status,
         })
     return render_template('orders.html', orders=result)
 
@@ -270,7 +277,7 @@ def claimorder():
     order = Order.query.filter_by(id=id).first()
 
     if order is not None:
-        order.status = "Being delivered"
+        order.status = "Being Delivered"
         order.Deliverer = deliv
         db.session.commit()
 
@@ -285,13 +292,14 @@ def orders():
     orders = Order.query.filter_by(Customer=customer).all()
     result = []
     for order in orders:
-        deliverer = ''
-        if deliverer:
+        deliverer = 'None'
+        if order.Deliverer:
             deliverer = order.Deliverer.name
         result.append({
             "id": order.id,
             "customer": order.Customer.name,
-            "deliverer": deliverer
+            "deliverer": deliverer,
+            "status": order.status,
         })
     
     delivered = request.args.get('delivered')
@@ -302,6 +310,13 @@ def orders():
             print(deliv_id)
             delivered = Order.query.filter_by(id=deliv_id).first()
             delivered.status = 'Delivered'
+            db.session.commit()
+
+    canceled = request.args.get('canceled')
+    if canceled is not None:
+        removed_order = Order.query.filter_by(id=canceled).first()
+        if removed_order is not None:
+            db.session.delete(removed_order)
             db.session.commit()
 
 

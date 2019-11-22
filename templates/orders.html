@@ -23,15 +23,25 @@
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title">ORDER</h5>
-                                <h6 class="card-subtitle">{{order.deliverer}}</h6>
-                                <p class="card-text">{{order.customer}}</p>
-                                <button class="btn btn-primary" style='margin-bottom: 10px'>Cancel order</button>
+                                <h5 class="card-title">ID: {{order.id}}</h5>
+                                <h6 class="card-subtitle">Customer: {{order.customer }}</h6>
+                                <p class="card-text">Deliverer: {{order.deliverer}}</p>
+                                <p class="card-text"><i>Status: {{order.status}}</i></p>
+                                {% if order.status == "Waiting for Deliverer" %}
+                                <form action='/orders'>
+                                    <input type='hidden' name='canceled' value={{order.id}}>
+                                    <button class="btn btn-warning btn-xs" type='submit' style='margin-bottom: 10px'>Cancel order</button>
+                                </form>
+                                 {% endif %}
+
+                                 {%if order.status == "Being Delivered" %}
                                 <form action='/orders'>
                                     <input type='hidden' name='delivered' value=True>
                                     <input type='hidden' name='delivered_id' value={{order.id}}>
-                                    <button class="btn btn-success" type='submit'>Delivered</button>
-                                </form>
+                                    <button class="btn btn-success btn-xs" type='submit'>Confirm Delivery</button>
+                                   
+                                </form> 
+                                {% endif %}
                             </div>
                         </div>
                     </div>
