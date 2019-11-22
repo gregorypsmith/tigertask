@@ -118,7 +118,7 @@ def homedeliver():
     username = CASClient().authenticate()
     deliv = Deliverer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
 
-    orders = Order.query.filter_by(status="Waiting for deliverer").all()
+    orders = Order.query.filter_by(status="Waiting for Deliverer").all()
 
     results = []
     for order in orders:
