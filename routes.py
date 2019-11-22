@@ -2,6 +2,8 @@ from app import app, db, mail
 from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
 from flask import render_template, request, make_response
 from CASClient import CASClient
+from datetime import datetime
+
 
 @app.route("/")
 @app.route("/index")
@@ -161,14 +163,17 @@ def cart():
     fee = 0
     for cart_item in cart_items:
         item = Item.query.filter_by(id=cart_item.itemid).first()
-        results.append({
-            "id": item.id,
-            "name": item.name,
-            "price": item.price,
-            "category": item.category,
-            "quantity": cart_item.quantity
-        })
-        subtotal += item.price * cart_item.quantity
+        
+        if item is not None:
+            results.append({
+                "id": item.id,
+                "name": item.name,
+                "price": item.price,
+                "category": item.category,
+                "quantity": cart_item.quantity
+            })
+            subtotal += item.price * cart_item.quantity
+
         if subtotal > 0:
             fee = 1.99
         if subtotal > 10:
@@ -176,7 +181,8 @@ def cart():
         if subtotal > 25:
             fee = 3.99
     
-    total = subtotal + fee
+    total = '%.2f'%(subtotal + fee)
+    subtotal = '%.2f'%(subtotal)
 
     buildfile = open(r"buildings.txt", "r")
     buildings = []
@@ -201,11 +207,28 @@ def placeorder():
     cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
     cart_items = CartItem.query.filter_by(Customer=cust).all()
 
+    subtotal = 0
+    for cart_item in cart_items:
+        item = Item.query.filter_by(id=cart_item.itemid).first()
+        if item is not None:
+            subtotal += item.price * cart_item.quantity
+
+        if subtotal > 0:
+            fee = 1.99
+        if subtotal > 10:
+            fee = 2.99
+        if subtotal > 25:
+            fee = 3.99
+    
+    total = '%.2f'%(subtotal + fee)
     building = request.args.get('building')
     roomnum = request.args.get('roomnum')
     note = request.args.get('note')
 
-    order = Order(Customer=cust, status="Waiting for deliverer", building=building, roomnum=roomnum, note=note)
+    now = datetime.now()
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
+    order = Order(Customer=cust, status="Waiting for deliverer", building=building, roomnum=roomnum, note=note, price=total, time_placed=dt_string)
     db.session.add(order)
     db.session.commit()
 
@@ -228,6 +251,20 @@ def placeorder():
             "deliverer": deliverer
         })
     return render_template('orders.html', orders=result)
+
+@app.route("/claimorder")
+def claimorder():
+    username = CASClient().authenticate()
+    deliv = Deliverer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
+
+    id = request.args.get('claimed_id')
+    order = Order.query.filter_by(id=id).first()
+
+    if order is not None:
+        order.status = "Claimed"
+        db.session.commit()
+
+    return render_template('deliveries.html')
 
 @app.route("/orders")
 def orders():
