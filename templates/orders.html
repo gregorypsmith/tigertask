@@ -11,15 +11,15 @@
                 <div class="categories">
                     <h4 class="my-4">Filter by:</h4>
                     <div class="list-group">
-                        <a href="#" class="list-group-item">All</a>
-                        <a href="#" class="list-group-item">Waiting for Deliverer</a>
-                        <a href="#" class="list-group-item">Being Delivered</a>
-                        <a href="#" class="list-group-item">Delivered</a>
+                        <a href="/orders?status=All" class="list-group-item">All</a>
+                        <a href="/orders?status=Waiting+for+Deliverer" class="list-group-item">Waiting for Deliverer</a>
+                        <a href="/orders?status=Being+Delivered" class="list-group-item">Being Delivered</a>
+                        <a href="/orders?status=Delivered" class="list-group-item">Delivered</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-9">
-                <h4 class="my-4">Order placed November 12, 2019 at 9:00 PM</h4>
+                <h4 class="my-4">My Orders ({{status}})</h4>
                 <div class="row">
                     {% for order in orders %}
                     <div class="col-lg-4 col-md-6 mb-4">

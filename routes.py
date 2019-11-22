@@ -224,12 +224,12 @@ def placeorder():
     cart_items = CartItem.query.filter_by(Customer=cust).all()
 
     subtotal = 0
+    fee = 0
     for cart_item in cart_items:
         item = Item.query.filter_by(id=cart_item.itemid).first()
         if item is not None:
             subtotal += item.price * cart_item.quantity
 
-        fee = 0
         if subtotal > 0:
             fee = 1.99
         if subtotal > 10:
@@ -245,9 +245,11 @@ def placeorder():
     now = datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 
-    order = Order(Customer=cust, status="Waiting for Deliverer", building=building, roomnum=roomnum, note=note, price=total, time_placed=dt_string)
-    db.session.add(order)
-    db.session.commit()
+    # prevents adding order multiple times when refreshing
+    if fee > 0:
+        order = Order(Customer=cust, status="Waiting for Deliverer", building=building, roomnum=roomnum, note=note, price=total, time_placed=dt_string)
+        db.session.add(order)
+        db.session.commit()
 
     for item in cart_items:
         newitem = OrderItem(quantity=item.quantity, itemid=item.itemid, Order=order)
@@ -287,7 +289,7 @@ def placeorder():
             "deliverer": deliverer,
             "status": order.status,
         })
-    return render_template('orders.html', orders=result)
+    return render_template('orders.html', orders=result, status="All")
 
 @app.route("/claimorder")
 def claimorder():
@@ -328,8 +330,16 @@ def orders():
             db.session.delete(removed_order)
             db.session.commit()
 
-    orders = Order.query.filter_by(Customer=customer).all()
+    status = request.args.get('status')
+    if status is None or status == 'All':
+        status = "All"
+        orders = Order.query.filter_by(Customer=customer).all()
+    else:
+        orders = Order.query.filter_by(Customer=customer, status=status).all()
+
+
     result = []
+    print(orders)
     for order in orders:
         deliverer = 'None'
         if order.Deliverer:
@@ -341,4 +351,4 @@ def orders():
             "status": order.status,
         })
 
-    return render_template('orders.html', orders=result)
+    return render_template('orders.html', orders=result, status=status)
