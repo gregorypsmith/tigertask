@@ -58,7 +58,8 @@ def homecustomer():
     if category is not None:
         if category != 'All':
             items = Item.query.filter(Item.name.contains(query)).filter_by(category=category).all()
-
+    else:
+        category = "All"
     results = []
     for item in items:
         results.append({
@@ -76,6 +77,7 @@ def homecustomer():
         items=results, 
         prevQuery=query,
         addedMsg='',
+        category=category,
         )
         response = make_response(html)
         return response
@@ -104,6 +106,7 @@ def homecustomer():
     items=results, 
     prevQuery=query,
     addedMsg=addedMsg,
+    category=category,
     )
 
     response = make_response(html)
@@ -288,19 +291,6 @@ def orders():
     username = CASClient().authenticate()
     
     customer = Customer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
-
-    orders = Order.query.filter_by(Customer=customer).all()
-    result = []
-    for order in orders:
-        deliverer = 'None'
-        if order.Deliverer:
-            deliverer = order.Deliverer.name
-        result.append({
-            "id": order.id,
-            "customer": order.Customer.name,
-            "deliverer": deliverer,
-            "status": order.status,
-        })
     
     delivered = request.args.get('delivered')
     if delivered:
@@ -316,8 +306,21 @@ def orders():
     if canceled is not None:
         removed_order = Order.query.filter_by(id=canceled).first()
         if removed_order is not None:
+            print("removing order")
             db.session.delete(removed_order)
             db.session.commit()
 
+    orders = Order.query.filter_by(Customer=customer).all()
+    result = []
+    for order in orders:
+        deliverer = 'None'
+        if order.Deliverer:
+            deliverer = order.Deliverer.name
+        result.append({
+            "id": order.id,
+            "customer": order.Customer.name,
+            "deliverer": deliverer,
+            "status": order.status,
+        })
 
     return render_template('orders.html', orders=result)

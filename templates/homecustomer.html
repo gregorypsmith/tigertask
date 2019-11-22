@@ -51,6 +51,7 @@
                             <form action="/homecustomer" method="GET">
                                 <input type="hidden" name="added" value="{{item.id}}" />
                                 <input type="hidden" name="query" value="{{prevQuery}}" />
+                                <input type="hidden" name="category" value="{{category}}" />
                                 <h5 class="card-title">{{item.name}}</h5>
                                 <h6 class="card-subtitle">${{item.price}}</h6>
                                 <div class="form-group">

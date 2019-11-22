@@ -9,10 +9,12 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="categories">
-                    <h4 class="my-4">Date</h4>
+                    <h4 class="my-4">Filter by:</h4>
                     <div class="list-group">
-                        <a href="#" class="list-group-item">November 12, 2019</a>
-                        <a href="#" class="list-group-item">November 11, 2019</a>
+                        <a href="#" class="list-group-item">All</a>
+                        <a href="#" class="list-group-item">Waiting for Deliverer</a>
+                        <a href="#" class="list-group-item">Being Delivered</a>
+                        <a href="#" class="list-group-item">Delivered</a>
                     </div>
                 </div>
             </div>
@@ -30,7 +32,7 @@
                                 {% if order.status == "Waiting for Deliverer" %}
                                 <form action='/orders'>
                                     <input type='hidden' name='canceled' value={{order.id}}>
-                                    <button class="btn btn-warning btn-xs" type='submit' style='margin-bottom: 10px'>Cancel order</button>
+                                    <button class="btn btn-danger btn-xs" type='submit' style='margin-bottom: 10px'>Cancel order</button>
                                 </form>
                                  {% endif %}
 
