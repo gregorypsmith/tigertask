@@ -62,8 +62,7 @@ admin.add_view(ModelView(Order, db.session))
 admin.add_view(ModelView(CartItem, db.session))
 admin.add_view(ModelView(OrderItem, db.session))
 
-if __name__ == '__main__':
-	db.create_all()
+db.create_all()
 
 
 
