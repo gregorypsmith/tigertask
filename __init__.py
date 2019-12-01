@@ -6,6 +6,7 @@ from app import app
 import routes
 
 if __name__ == "__main__":
+    print("Running app")
     if is_heroku:
         app.run(debug=False)
     else: 
