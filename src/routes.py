@@ -1,7 +1,15 @@
-from app import app, db, mail
-from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
+
 from flask import render_template, request, make_response
-from CASClient import CASClient
+from utils import is_heroku
+
+if is_heroku():
+    from src.app import app, db, mail
+    from src.database import Customer, Deliverer, CartItem, Order, OrderItem, Item
+    from src.CASClient import CASClient
+else:
+    from app import app, db, mail
+    from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
+    from CASClient import CASClient
 
 @app.route("/")
 @app.route("/index")

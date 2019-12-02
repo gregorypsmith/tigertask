@@ -1,6 +1,12 @@
 import os
 
-from app import db, admin, mail
+from utils import is_heroku
+
+if is_heroku():
+	from src.app import db, admin, mail
+else:
+	from app import db, admin, mail
+
 from flask_admin.contrib.sqla import ModelView
 
 
