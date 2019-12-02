@@ -1,7 +1,7 @@
 import os
-from utils import is_heroku
+is_heroku = os.environ.get("IS_HEROKU", None)
 
-if is_heroku():
+if is_heroku:
     from src.app import app
 else:
     from app import app

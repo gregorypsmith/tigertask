@@ -1,8 +1,9 @@
 
 from flask import render_template, request, make_response
-from utils import is_heroku
 
-if is_heroku():
+is_heroku = os.environ.get("IS_HEROKU", None)
+
+if is_heroku:
     from src.app import app, db, mail
     from src.database import Customer, Deliverer, CartItem, Order, OrderItem, Item
     from src.CASClient import CASClient

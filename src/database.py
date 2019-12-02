@@ -1,8 +1,7 @@
 import os
+is_heroku = os.environ.get("IS_HEROKU", None)
 
-from utils import is_heroku
-
-if is_heroku():
+if is_heroku:
 	from src.app import db, admin, mail
 else:
 	from app import db, admin, mail
