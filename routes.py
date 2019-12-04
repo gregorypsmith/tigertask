@@ -390,50 +390,30 @@ def orderdetails():
         total_price = item.price * orderitem.quantity
 
         item_info.append({
-            "name": item.name
-            "total_price": total_price
-            "price": item.price
-            "quantity": orderitem.quantity
+            "name": item.name,
+            "total_price": total_price,
+            "price": item.price,
+            "quantity": orderitem.quantity,
         })
 
     order_info = []
     order_info.append({
-        "status": order.status
-        "building": order.building
-        "roomnum": order.roomnum
-        "note": order.note
-        "price": order.price
-        "time_placed": order.time_placed
+        "status": order.status,
+        "building": order.building,
+        "roomnum": order.roomnum,
+        "note": order.note,
+        "price": order.price,
+        "time_placed": order.time_placed,
     })
 
     cust_info = []
     cust_info.append({
-        "name": cust.name
-        "phone_number": cust.phone_number
-        "email": cust.email
+        "name": cust.name,
+        "phone_number": cust.phone_number,
+        "email": cust.email,
     })
 
     render_template('orderdetails.html', item_info=item_info, order_info=order_info, cust_info=cust_info)
 
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
