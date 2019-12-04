@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Order details{% endblock title %}
+
+{% block content %}
+{% include 'navbardeliver.html' %}
+<div class="container">
+    <div class="row">
+        {% for item in item_info %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Item info</h5>
+                <p class="card-text">Item name: {{item.name}}</p>
+                <p class="card-text">Total price: {{item.total_price}}</p>
+                <p class="card-text">Price: {{item.price}}</p>
+                <p class="card-text">Quantity: {{item.quantity}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        {% for order in order_info %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Order info</h5>
+                <p class="card-text">Status: {{order.status}} </p>
+                <p class="card-text">Building: {{order.building}} </p>
+                <p class="card-text">Room number: {{order.roomnum}} </p>
+                <p class="card-text">Note: {{order.note}} </p>
+                <p class="card-text">Price: {{order.price}} </p>
+                <p class="card-text">Time placed: {{order.time_placed}} </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        {% for cust in cust_info %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Customer info</h5>
+                <p class="card-text">Name: {{cust.name}}</p>
+                <p class="card-text">Phone number: {{cust.phone_number}}</p>
+                <p class="card-text">Email: {{cust.email}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
