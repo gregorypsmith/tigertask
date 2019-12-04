@@ -369,3 +369,69 @@ def orders():
         })
 
     return render_template('orders.html', orders=result, status=status)
+
+
+@app.route("/orderdetails")
+def orderdetails():
+    username = CASClient().authenticate()
+    deliv = Deliverer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
+
+    id = request.args.get('claimed_id')
+    order = Order.query.filter_by(id=id).first()
+    cust = Customer.query.filter_by(id=order.custid).first()
+    orderitems = OrderItem.query.filter_by(Order=order)
+
+    item_info = []
+    for orderitem in orderitems:
+
+        item = Item.query.filter_by(id=orderitem.itemid).first()
+        total_price = item.price * orderitem.quantity
+
+        item_info.append({
+            "name": item.name
+            "total_price": total_price
+            "price": item.price
+            "quantity": orderitem.quantity
+        })
+
+    order_info = []
+    order_info.append({
+        "status": order.status
+        "building": order.building
+        "roomnum": order.roomnum
+        "note": order.note
+        "price": order.price
+        "time_placed": order.time_placed
+    })
+
+    cust_info = []
+    cust_info.append({
+        "name": cust.name
+        "phone_number": cust.phone_number
+        "email": cust.email
+    })
+
+    render_template('orderdetails.html', item_info=item_info, order_info=order_info, cust_info=cust_info)
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
