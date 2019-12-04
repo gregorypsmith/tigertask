@@ -360,11 +360,13 @@ def orders():
     for order in orders:
         deliverer = 'None'
         if order.Deliverer:
-            deliverer = order.Deliverer.name
+            deliverer_name = order.Deliverer.name
+            deliverer_num = order.Deliverer.phone_number
         result.append({
             "id": order.id,
             "customer": order.Customer.name,
-            "deliverer": deliverer,
+            "deliverer": deliverer_name,
+            "deliverer_num": deliverer_num,
             "status": order.status,
         })
 
