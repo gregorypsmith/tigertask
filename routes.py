@@ -413,7 +413,6 @@ def orderdetails():
         "email": cust.email,
     })
 
-    render_template('orderdetails.html', item_info=item_info, order_info=order_info, cust_info=cust_info)
+    return render_template('orderdetails.html', item_info=item_info, order_info=order_info, cust_info=cust_info)
 
-    
 
