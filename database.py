@@ -25,6 +25,7 @@ class Item(db.Model):
 	name = db.Column(db.Unicode)
 	price = db.Column(db.Integer)
 	category = db.Column(db.Unicode)
+	inStock = db.Column(db.Unicode)
 
 	orderitems = db.relationship('OrderItem', backref='Item')
 	cartitems = db.relationship('CartItem', backref='Item')

@@ -21,6 +21,7 @@ def populate_database():
                 name=sheet.cell_value(i, 0),
                 price=sheet.cell_value(i, 1),
                 category=sheet.cell_value(i, 2),
+                inStock="True"
                 )
 
             db.session.add(item_to_add)

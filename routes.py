@@ -383,6 +383,10 @@ def orderdetails():
     cust = Customer.query.filter_by(id=order.custid).first()
     orderitems = OrderItem.query.filter_by(Order=order)
 
+    # out_of_stock_id = request.args.get('out_of_stock_id')
+    # if out_of_stock_id is not None:
+    #     item 
+
     item_info = []
     for orderitem in orderitems:
 
