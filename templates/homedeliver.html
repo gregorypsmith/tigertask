@@ -66,9 +66,14 @@
                         <td>{{result.name}}</td>
                         <td>{{result.phone_number}}</td>
                         <td>{{result.building}} {{result.roomnum}}</td>
-                        <td><a href="/orderdetails">See More</a></td>
                         <td>${{result.price}}</td>
                         <td>{{result.time_placed}}</td>
+                        <td>
+                            <form action="/orderdetails" method="GET">
+                                <input type="hidden" name="details_id" value="{{result.id}}" />
+                                <button class="btn btn-primary" type='submit'>See More</button>
+                            </form>
+                        </td>
                         <td>
                             <form action="/claimorder" method="GET">
                                 <input type="hidden" name="claimed_id" value="{{result.id}}" />

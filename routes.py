@@ -378,7 +378,7 @@ def orderdetails():
     username = CASClient().authenticate()
     deliv = Deliverer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
 
-    id = request.args.get('claimed_id')
+    id = request.args.get('details_id')
     order = Order.query.filter_by(id=id).first()
     cust = Customer.query.filter_by(id=order.custid).first()
     orderitems = OrderItem.query.filter_by(Order=order)
@@ -414,5 +414,3 @@ def orderdetails():
     })
 
     return render_template('orderdetails.html', item_info=item_info, order_info=order_info, cust_info=cust_info)
-
-
