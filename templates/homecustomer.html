@@ -22,20 +22,18 @@
         <div class="col-md-4 col-lg-3">
             <!-- category filter -->
             <div class="card mb-4">
-                <div class="card-body">
+                <div class="card-body pb-2">
                     <h5 class="card-title mb-0">Filter by</h5>
                 </div>
-                <form action="/homecustomer" name="category">
-                    <div class="list-group list-group-flush">
-                        <a href="/homecustomer?category=All" class="list-group-item border-top">All</a>
-                        <a href="/homecustomer?category=Food" class="list-group-item">Food</a>
-                        <a href="/homecustomer?category=Kitchenware" class="list-group-item">Kitchenware</a>
-                        <a href="/homecustomer?category=Medicine" class="list-group-item">Medicine</a>
-                        <a href="/homecustomer?category=Toiletries" class="list-group-item">Toiletries</a>
-                        <a href="/homecustomer?category=Cleaning" class="list-group-item">Cleaning supplies</a>
-                        <a href="/homecustomer?category=School" class="list-group-item">School supplies</a>
-                    </div>
-                </form>
+                <div class="list-group list-group-flush pb-2">
+                    <a href="/homecustomer?category=All" class="list-group-item border-0">All</a>
+                    <a href="/homecustomer?category=Food" class="list-group-item border-0">Food</a>
+                    <a href="/homecustomer?category=Kitchenware" class="list-group-item border-0">Kitchenware</a>
+                    <a href="/homecustomer?category=Medicine" class="list-group-item border-0">Medicine</a>
+                    <a href="/homecustomer?category=Toiletries" class="list-group-item border-0">Toiletries</a>
+                    <a href="/homecustomer?category=Cleaning" class="list-group-item border-0">Cleaning supplies</a>
+                    <a href="/homecustomer?category=School" class="list-group-item border-0">School supplies</a>
+                </div>
             </div>
         </div>
 
@@ -54,7 +52,7 @@
                                 <input type="hidden" name="category" value="{{category}}">
                                 <div class="d-flex flex-wrap align-items-center mb-2">
                                     <h5 class="card-subtitle mt-0">${{item.price}}</h5>
-                                    <select class="form-control quantity-select ml-auto">
+                                    <select class="form-control quantity-select ml-auto" name="quantity">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
