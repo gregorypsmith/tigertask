@@ -6,6 +6,8 @@
 {% include 'navbarcustomer.html' %}
 
 <div class="container">
+    <h4 class="mb-4">Browse items</h4>
+
     <!-- search bar -->
     <form class="mb-4" action="/homecustomer" method="GET">
         <div class="input-group">
@@ -51,7 +53,7 @@
                                 <input type="hidden" name="query" value="{{prevQuery}}">
                                 <input type="hidden" name="category" value="{{category}}">
                                 <div class="d-flex flex-wrap align-items-center mb-2">
-                                    <h5 class="card-subtitle mt-0">${{item.price}}</h5>
+                                    <h5 class="card-subtitle font-weight-normal mt-0">${{item.price}}</h5>
                                     <select class="form-control quantity-select ml-auto" name="quantity">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
