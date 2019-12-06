@@ -4,15 +4,30 @@
 
 {% block content %}
 {% include 'navbarcustomer.html' %}
+
 <div class="container">
+    <!-- search bar -->
+    <form class="mb-4" action="/homecustomer" method="GET">
+        <div class="input-group">
+            <input type="search" name="query" class="form-control" value="{{prevQuery}}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
     <div class="row">
-        <div class="col-md-3">
-            <!-- category list group -->
-            <div class="d-none d-sm-block">
-                <h4 class="my-4">Category</h4>
-                <form action="/homecustomer" name='category'>
-                    <div class="list-group">
-                        <a href="/homecustomer?category=All" class="list-group-item">All</a>
+        <div class="col-md-4 col-lg-3">
+            <!-- category filter -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-0">Filter by</h5>
+                </div>
+                <form action="/homecustomer" name="category">
+                    <div class="list-group list-group-flush">
+                        <a href="/homecustomer?category=All" class="list-group-item border-top">All</a>
                         <a href="/homecustomer?category=Food" class="list-group-item">Food</a>
                         <a href="/homecustomer?category=Kitchenware" class="list-group-item">Kitchenware</a>
                         <a href="/homecustomer?category=Medicine" class="list-group-item">Medicine</a>
@@ -22,49 +37,33 @@
                     </div>
                 </form>
             </div>
-            <!-- category dropdown -->
-            <div class="dropdown d-block d-sm-none mt-3">
-                <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                    Category
-                </button>
-                <div class="dropdown-menu">
-                    <form action="/homecustomer" name='category'>
-                        <a href="/homecustomer?category=All" class="dropdown-item">All</a>
-                        <a href="/homecustomer?category=Food" class="dropdown-item">Food</a>
-                        <a href="/homecustomer?category=Kitchenware" class="dropdown-item">Kitchenware</a>
-                        <a href="/homecustomer?category=Medicine" class="dropdown-item">Medicine</a>
-                        <a href="/homecustomer?category=Toiletries" class="dropdown-item">Toiletries</a>
-                        <a href="/homecustomer?category=Cleaning" class="dropdown-item">Cleaning supplies</a>
-                        <a href="/homecustomer?category=School" class="dropdown-item">School supplies</a>
-                    </form>
-                </div>
-            </div>
         </div>
-        <div class="col-md-9">
-            <h4 class="my-4">Items</h4>
-            <h5 style="color: green">{{addedMsg}}</h5>
+
+        <div class="col-md-8 col-lg-9">
+            <h5 class="text-success m-0">{{addedMsg}}</h5>
             <div class="row">
                 {% for item in items %}
-                <div class="col-lg-4 col-md-6 mb-4">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <!-- item cards -->
                     <div class="card h-100">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">{{item.name}}</h5>
                             <form class="mt-auto" action="/homecustomer" method="GET">
-                                <input type="hidden" name="added" value="{{item.id}}" />
-                                <input type="hidden" name="query" value="{{prevQuery}}" />
-                                <input type="hidden" name="category" value="{{category}}" />
-                                <h6 class="card-subtitle mb-2">${{item.price}}</h6>
-                                <div class="input-group">
-                                    <select class="custom-select" name="quantity">
+                                <input type="hidden" name="added" value="{{item.id}}">
+                                <input type="hidden" name="query" value="{{prevQuery}}">
+                                <input type="hidden" name="category" value="{{category}}">
+                                <div class="d-flex flex-wrap align-items-center mb-2">
+                                    <h5 class="card-subtitle mt-0">${{item.price}}</h5>
+                                    <select class="form-control quantity-select ml-auto">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
                                         <option value="4">4</option>
                                         <option value="5">5</option>
                                     </select>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type='submit'>Add to cart</button>
-                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <button class="btn btn-primary flex-fill" type="submit">Add to cart</button>
                                 </div>
                             </form>
                         </div>

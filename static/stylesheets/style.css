@@ -10,3 +10,7 @@ html, body {
 .form-label-align {
     text-align: left;
 }
+
+.quantity-select {
+    max-width: 6em;
+}

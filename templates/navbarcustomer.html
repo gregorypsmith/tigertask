@@ -1,9 +1,11 @@
-<!-- only show on <sm screens -->
-<div class="d-block d-sm-none">
-    <nav class="navbar navbar-expand navbar-light bg-light">
-        <a class="navbar-brand" href="/homecustomer">TigerTask</a>
+<nav class="navbar navbar-expand-sm navbar-light bg-light mb-4">
+    <a class="navbar-brand" href="/homecustomer">TigerTask</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <ul class="navbar-nav ml-auto">
+    <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link" href="/homecustomer">Browse</a>
             </li>
@@ -14,44 +16,5 @@
                 <a class="nav-link" href="/orders">Orders</a>
             </li>
         </ul>
-    </nav>
-
-    <nav class="navbar navbar-expand navbar-light bg-light pt-0">
-        <form class="w-100" action="/homecustomer" method="GET">
-            <div class="input-group">
-                <input type="search" name="query" class="form-control" placeholder="Search" value="{{prevQuery}}">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </div>
-            </div>
-        </form>
-    </nav>
-</div>
-
-<!-- only show on >sm screens -->
-<div class="d-none d-sm-block">
-    <nav class="navbar navbar-expand navbar-light bg-light">
-        <a class="navbar-brand" href="/homecustomer">TigerTask</a>
-
-        <form class="mr-2" action="/homecustomer" method="GET">
-            <div class="input-group">
-                <input type="search" name="query" class="form-control" placeholder="Search" value="{{prevQuery}}">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </div>
-            </div>
-        </form>
-
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/homecustomer">Browse</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/cart">Cart</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/orders">Orders</a>
-            </li>
-        </ul>
-    </nav>
-</div>
+    </div>
+</nav>
