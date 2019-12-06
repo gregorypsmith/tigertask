@@ -3,87 +3,58 @@
 {% block title %}Available Deliveries{% endblock title %}
 
 {% block content %}
-    {% include 'navbardeliver.html' %}
-    <div class="container">
-        <div class="row col-sm-12">
-            <h4 class="my-4">Available deliveries</h4>
+{% include 'navbardeliver.html' %}
+<div class="container">
+    <h4 class="mb-4">Available deliveries</h4>
+    <div class="row">
+        <div class="col-md-4 col-lg-3">
+            <div class="card mb-4">
+                <div class="card-body pb-3">
+                    <h5 class="card-title mb-0">Filter by</h5>
+                </div>
+                <div class="list-group list-group-flush pb-2">
+                    <!-- example filters WIP -->
+                    <a href="#" class="list-group-item border-0">Butler</a>
+                    <a href="#" class="list-group-item border-0">Wilson</a>
+                    <a href="#" class="list-group-item border-0">Rockefeller</a>
+                    <a href="#" class="list-group-item border-0">Mathey</a>
+                    <a href="#" class="list-group-item border-0">Whitman</a>
+                    <a href="#" class="list-group-item border-0">Forbes</a>
+                    <a href="#" class="list-group-item border-0">Other</a>
+                </div>
+            </div>
         </div>
-        <div class="row col-sm-12">
-            <!--This commented out code is a jinja2 loop that allows us to display all available deliveries. It requires a 2D list with each delivery and its info-->
-
-            <!--
-        {#
-            {% if deliveries[0]|length == 0: %}
-            <p>No deliveries to display.</p>
-        {% else: %}
-    <table>
-        <tr>
-            <th> Location </th>
-            <th> Items </th>
-            <th> Price </th>
-            <th> Date Placed </th>
-            <th> Claim </th>
-        </tr>
-        
-        {%    for n in range(deliveries|length): %}
-            <tr>
-            <td>
-            {{deliveries[0][n]}}
-            </td>
-            <td>
-                {{deliveries[1][n]}}
-            </td>
-            <td>
-                {{deliveries[2][n]}}
-            </td>
-            <td>
-                {{deliveries[3][n]}}
-            </td>
-            <td>
-            <button>Claim Order</button>>
-            </td>
-            </tr>
-                        {%    endfor %}
-                    {% endif %}
-    </table>
-    #}
--->
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Customer Name</th>
-                        <th scope="col">Customer Contact</th>
-                        <th scope="col">Location </th>
-                        <th scope="col">Price </th>
-                        <th scope="col">Time Placed </th>
-                        <th scope="col">Items </th>
-                        <th scope="col">Claim </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for result in results %}
-                    <tr>
-                        <td>{{result.name}}</td>
-                        <td>{{result.phone_number}}</td>
-                        <td>{{result.building}} {{result.roomnum}}</td>
-                        <td>${{result.price}}</td>
-                        <td>{{result.time_placed}}</td>
-                        <td>
-                            <form action="/orderdetails" method="GET">
-                                <input type="hidden" name="details_id" value="{{result.id}}" />
-                                <button class="btn btn-primary" type='submit'>See More</button>
-                            </form>
-                        </td>
-                        <td>
-                            <form action="/claimorder" method="GET">
-                                <input type="hidden" name="claimed_id" value="{{result.id}}" />
-                                <button class="btn btn-primary" type='submit'>Claim now!</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="col-md-8 col-lg-9">
+            <div class="row">
+                {% for result in results %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <!-- order cards very much a WIP -->
+                    <div class="card h-100">
+                        <div class="card-header">
+                            Order id and/or date
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text"><strong>Customer name</strong><br> {{result.name}}</p>
+                            <p class="card-text"><strong>Customer contact</strong><br> {{result.phone_number}}</p>
+                            <p class="card-text"><strong>Location</strong><br> {{result.building}} {{result.roomnum}}</p>
+                            <p class="card-text"><strong>Price</strong><br> ${{result.price}}</p>
+                            <p class="card-text"><strong>Time placed</strong><br> {{result.time_placed}}</p>
+                            <div class="d-flex flex-wrap">
+                                <form action="/orderdetails" method="GET">
+                                    <input type="hidden" name="details_id" value="{{result.id}}">
+                                    <button class="btn btn-primary" type="submit">See details</button>
+                                </form>
+                                <form action="/claimorder" method="GET" class="ml-auto">
+                                    <input type="hidden" name="claimed_id" value="{{result.id}}">
+                                    <button class="btn btn-primary" type="submit">Claim order</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
+</div>
 {% endblock content %}
