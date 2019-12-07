@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<body onload='payNow()'>
+<script src="https://js.stripe.com/v3/"></script>
+<h1>Placing your order...</h1>
+<script>
+    function payNow(){
+        var stripe = Stripe('pk_live_eolfZnIqe0IBDBsRMqEuvqCT00ITTEIqcA');
+            
+        stripe.redirectToCheckout({
+            sessionId: '{{sessionid}}'
+        }).then(function (result) {
+        });
+        }
+    </script>
+</body>
+</html>

@@ -3,6 +3,8 @@ from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
 from flask import render_template, request, make_response
 from CASClient import CASClient
 from datetime import datetime
+import stripe
+import urllib
 
 BEING_DELIVERED = "Being Delivered"
 DELIVERED = "Delivered"
@@ -210,11 +212,38 @@ def cart():
 
     return render_template('cart.html', cart=results, subtotal=subtotal, fee=fee, total=total, buildings=buildings)
 
-
 @app.route("/about")
 def about():
     username = CASClient().authenticate()
     return render_template('about.html')
+
+@app.route("/pay")
+def pay():
+
+    username = CASClient().authenticate()
+    stripe.api_key = 'sk_live_s7cVmV1jM2a5IKAKFv1PISOl00CkFtmnW4'
+
+    total = request.args.get('total')
+    building = request.args.get('building')
+    roomnum = request.args.get('roomnum')
+    note = request.args.get('note')
+
+    session = stripe.checkout.Session.create(
+    customer_email=str(username.strip() + '@princeton.edu'),
+    payment_method_types=['card'],
+    line_items=[{
+        'name': 'Confirm Order',
+        'description': 'We will get these items to you in a jif!',
+        'images': ['https://www.cs.princeton.edu/sites/all/modules/custom/cs_people/generate_thumbnail.php?id=12&thumb='],
+        'amount': 50,
+        'currency': 'usd',
+        'quantity': 1,
+    }],
+    success_url=str('https://ezapply.herokuapp.com/placeorder?building=' + urllib.parse.quote(building) + \
+         '&roomnum=' + urllib.parse.quote(roomnum) + '&note=' + urllib.parse.quote(note)),
+    cancel_url='https://ezapply.herokuapp.com/cart',
+    )
+    return render_template('placingorder.html', sessionid=session.id)
 
 @app.route("/placeorder")
 def placeorder():
@@ -354,11 +383,11 @@ def orders():
     else:
         orders = Order.query.filter_by(Customer=customer, status=status).all()
 
-
     result = []
     print(orders)
     for order in orders:
-        deliverer = 'None'
+        deliverer_name = 'None'
+        deliverer_num = 'None'
         if order.Deliverer:
             deliverer_name = order.Deliverer.name
             deliverer_num = order.Deliverer.phone_number
