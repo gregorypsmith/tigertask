@@ -239,9 +239,9 @@ def pay():
         'currency': 'usd',
         'quantity': 1,
     }],
-    success_url=str('https://ezapply.herokuapp.com/placeorder?building=' + urllib.parse.quote(building) + \
+    success_url=str('https://tigertask.herokuapp.com/placeorder?building=' + urllib.parse.quote(building) + \
          '&roomnum=' + urllib.parse.quote(roomnum) + '&note=' + urllib.parse.quote(note)),
-    cancel_url='https://ezapply.herokuapp.com/cart',
+    cancel_url='https://tigertask.herokuapp.com/cart',
     )
     return render_template('placingorder.html', sessionid=session.id)
 
