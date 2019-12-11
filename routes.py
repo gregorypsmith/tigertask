@@ -229,6 +229,11 @@ def pay():
     roomnum = request.args.get('roomnum')
     note = request.args.get('note')
 
+    print('The total is: ' + str(int(float(total) * 100)))
+    print()
+    print()
+    print()
+
     session = stripe.checkout.Session.create(
     customer_email=str(username.strip() + '@princeton.edu'),
     payment_method_types=['card'],
@@ -236,7 +241,7 @@ def pay():
         'name': 'Confirm Order',
         'description': 'We will get these items to you in a jif!',
         'images': ['https://www.cs.princeton.edu/sites/all/modules/custom/cs_people/generate_thumbnail.php?id=12&thumb='],
-        'amount': 50,
+        'amount': int(float(total) * 100),
         'currency': 'usd',
         'quantity': 1,
     }],

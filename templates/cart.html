@@ -37,7 +37,8 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Deliver to</h5>
-                    <form action="/pay?total={{total}}&building={{building}}&roomnum={{roomnum}}&note={{note}}" method="GET" onsubmit='payNow()'>
+                    <form action="/pay?building={{building}}&roomnum={{roomnum}}&note={{note}}" method="GET">
+                        <input type='hidden' name='total' value='{{total}}'>
                         <div class="form-group">
                             <select class="form-control" name="building">
                                 {% for building in buildings %}
