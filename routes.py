@@ -5,6 +5,7 @@ from CASClient import CASClient
 from datetime import datetime
 import stripe
 import urllib
+import os 
 
 BEING_DELIVERED = "Being Delivered"
 DELIVERED = "Delivered"
@@ -221,7 +222,7 @@ def about():
 def pay():
 
     username = CASClient().authenticate()
-    stripe.api_key = 'sk_live_s7cVmV1jM2a5IKAKFv1PISOl00CkFtmnW4'
+    stripe.api_key = os.environ.get('SECRET_KEY')
 
     total = request.args.get('total')
     building = request.args.get('building')
