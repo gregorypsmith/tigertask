@@ -1,6 +1,7 @@
 from app import app, db, mail
 from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
-from flask import render_template, request, make_response
+from flask import render_template, request, make_response, redirect
+from flask_sslify import SSLify
 from CASClient import CASClient
 from datetime import datetime
 import stripe
@@ -10,6 +11,8 @@ import os
 BEING_DELIVERED = "Being Delivered"
 DELIVERED = "Delivered"
 WAITING = "Waiting for Deliverer"
+
+sslify = SSLify(app)
 
 @app.route("/")
 @app.route("/index")
