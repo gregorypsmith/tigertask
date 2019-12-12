@@ -12,22 +12,28 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Your balance</h5>
-                    <table class="table table-borderless">
-                        <tbody>
-                            <tr>
-                                <td scope="row">Total:</td>
-                                <td>${{subtotal}}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row">placeholder:</td>
-                                <td>${{placeholder}}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row">placeholder:</td>
-                                <td>${{placeholder}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- not sure of transfer to bank implementation, but here's a form with no inputs and a button -->
+                    <form action="" method="GET">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td scope="row">Total:</td>
+                                    <td>${{subtotal}}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">placeholder:</td>
+                                    <td>${{placeholder}}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">placeholder:</td>
+                                    <td>${{placeholder}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex">
+                            <button class="btn btn-primary flex-fill" type="submit">Transfer to bank</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
