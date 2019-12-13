@@ -232,11 +232,6 @@ def pay():
     roomnum = request.args.get('roomnum')
     note = request.args.get('note')
 
-    print('The total is: ' + str(int(float(total) * 100)))
-    print()
-    print()
-    print()
-
     session = stripe.checkout.Session.create(
     customer_email=str(username.strip() + '@princeton.edu'),
     payment_method_types=['card'],
