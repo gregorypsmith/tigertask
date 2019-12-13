@@ -246,14 +246,15 @@ def pay():
     print()
     print()
 
-    #testing payments when debugging
+    # for testing payments when debugging
     total = 0.50
     session = stripe.checkout.Session.create(
     customer_email=str(username.strip() + '@princeton.edu'),
     payment_method_types=['card'],
     line_items=[{
         'name': 'Confirm Order',
-        'description': 'We will get these items to you in a jif!',
+        'description': '''We will get these items to you in a jif! 
+        For testing you will be charged $0.50''',
         'images': ['https://www.cs.princeton.edu/sites/all/modules/custom/cs_people/generate_thumbnail.php?id=12&thumb='],
         'amount': int(float(total) * 100),
         'currency': 'usd',
@@ -396,7 +397,7 @@ def orders():
             # we need to add this balance to the deliverer's account
             deliverer = delivered.Deliverer
             deliverer.balance += delivered.price
-            
+
             db.session.commit()
 
     canceled = request.args.get('canceled')
