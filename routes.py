@@ -393,7 +393,10 @@ def orders():
             delivered = Order.query.filter_by(id=deliv_id).first()
             delivered.status = 'Delivered'
 
-            # we need to add this balance to the customer's account
+            # we need to add this balance to the deliverer's account
+            deliverer = delivered.Deliverer
+            deliverer.balance += delivered.price
+            
             db.session.commit()
 
     canceled = request.args.get('canceled')
@@ -480,4 +483,5 @@ def orderdetails():
 @app.route("/dashboard")
 def dashboard():
     username = CASClient().authenticate()
-    return render_template('dashboard.html')
+    deliverer = Deliverer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
+    return render_template('dashboard.html', subtotal=deliverer.balance)
