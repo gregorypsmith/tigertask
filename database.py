@@ -17,6 +17,8 @@ class Deliverer(db.Model):
 	name = db.Column(db.Unicode)
 	phone_number = db.Column(db.Unicode)
 	email = db.Column(db.Unicode)
+	venmo = db.Column(db.Unicode)
+	balance = db.Column(db.Float)
 
 	orders = db.relationship('Order', backref='Deliverer')
 

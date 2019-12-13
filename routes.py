@@ -35,12 +35,21 @@ def createaccount():
     fname = request.args.get('firstname')
     lname = request.args.get('lastname')
     phone = request.args.get('phone')
+    venmo = request.args.get('venmo')
 
     if fname is None or lname is None or phone is None:
         return render_template('createaccount.html', errorMsg="Please enter your information below.")
 
-    newcust = Customer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
-    newdeliv = Deliverer(name=str(fname + ' ' + lname), phone_number=phone, email=str(username.strip() + "@princeton.edu"))
+    newcust = Customer(
+        name=str(fname + ' ' + lname), 
+        phone_number=phone, 
+        email=str(username.strip() + "@princeton.edu"))
+    newdeliv = Deliverer(
+        name=str(fname + ' ' + lname), 
+        phone_number=phone, 
+        email=str(username.strip() + "@princeton.edu"),
+        venmo=venmo,
+        balance=0)
     
     db.session.add(newcust)
     db.session.add(newdeliv)
@@ -237,6 +246,8 @@ def pay():
     print()
     print()
 
+    #testing payments when debugging
+    # total = 0.50
     session = stripe.checkout.Session.create(
     customer_email=str(username.strip() + '@princeton.edu'),
     payment_method_types=['card'],
@@ -303,6 +314,12 @@ def placeorder():
             print(deliv_id)
             delivered = Order.query.filter_by(id=deliv_id).first()
             delivered.status = 'Delivered'
+
+            deliverer = delivered.Deliverer
+            if deliverer:
+                deliverer.balance += delivered.price
+            
+            db.session.add(deliverer)
             db.session.commit()
 
     canceled = request.args.get('canceled')
@@ -375,6 +392,8 @@ def orders():
             print(deliv_id)
             delivered = Order.query.filter_by(id=deliv_id).first()
             delivered.status = 'Delivered'
+
+            # we need to add this balance to the customer's account
             db.session.commit()
 
     canceled = request.args.get('canceled')
@@ -456,3 +475,9 @@ def orderdetails():
     })
 
     return render_template('orderdetails.html', item_info=item_info, order_info=order_info, cust_info=cust_info)
+
+
+@app.route("/dashboard")
+def dashboard():
+    username = CASClient().authenticate()
+    return render_template('dashboard.html')
