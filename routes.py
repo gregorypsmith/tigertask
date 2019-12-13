@@ -247,7 +247,7 @@ def pay():
     print()
 
     #testing payments when debugging
-    # total = 0.50
+    total = 0.50
     session = stripe.checkout.Session.create(
     customer_email=str(username.strip() + '@princeton.edu'),
     payment_method_types=['card'],
