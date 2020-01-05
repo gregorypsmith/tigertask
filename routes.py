@@ -353,14 +353,9 @@ def placeorder():
     msg = Message("Order Placed!",
         sender=admin_mail,
         recipients=[cust.email])
-    msg.body = """ Hello!
-
-    Your order with TigerTask has been placed! Stay tuned for more updates.
-
-    If you have any questions, feel free to email us at tigertask.princeton@gmail.com.
-
-    Best,
-    TigerTask Team """
+    msg.body = "Hello!\n\nYour order with TigerTask has been placed! Stay tuned for more updates. "
+    msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+    msg.body += "\n\nBest,\nTigerTask Team "
     mail.send(msg)
 
     return render_template('orders.html', orders=result, status="All")
@@ -407,9 +402,9 @@ def claimorder():
         msg = Message("Order Claimed!",
             sender=admin_mail,
             recipients=[cust.email])
-        msg.body = "Hello!\n\nGood news! Your order has been claimed. Your deliverer is "
-        msg.body += deliv.name + " and their phone number is " + deliv.phone_number
-        msg.body += " if you need to contact them for any reason.\n\nBest,\nTigerTask Team"
+        msg.body = "Hello!\n\nGood news! Your order has been claimed. Your deliverer is <b>"
+        msg.body += deliv.name + "</b> and their phone number is " + deliv.phone_number
+        msg.body += "\n\nBest,\nTigerTask Team"
         mail.send(msg)
 
 
