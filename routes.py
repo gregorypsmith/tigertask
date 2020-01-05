@@ -444,32 +444,48 @@ def orderdetails():
     cust = Customer.query.filter_by(id=order.custid).first()
     orderitems = OrderItem.query.filter_by(Order=order)
 
-    # out_of_stock_id = request.args.get('out_of_stock_id')
-    # if out_of_stock_id is not None:
-    #     item 
+     # orderitem id of an item that is being marked out of stock
+    out_of_stock_id = request.args.get('out_of_stock_id')
+    if out_of_stock_id is not None:
+       orderItem = OrderItem.query.get(out_of_stock_id)
+       if orderItem:
+           orderItem.Item.inStock = "False" 
+           db.session.commit()
+
+     # orderitem id of an item that is being marked out of stock
+    in_stock_id = request.args.get('in_stock_id')
+    if in_stock_id is not None:
+       orderItem = OrderItem.query.get(in_stock_id)
+       if orderItem:
+           orderItem.Item.inStock = "True" 
+           db.session.commit()
 
     item_info = []
     for orderitem in orderitems:
 
-        item = Item.query.filter_by(id=orderitem.itemid).first()
+        item = orderitem.Item #Item.query.filter_by(id=orderitem.itemid).first()
         total_price = item.price * orderitem.quantity
 
         item_info.append({
+            "id": orderitem.id,
             "name": item.name,
             "total_price": total_price,
             "price": item.price,
             "quantity": orderitem.quantity,
+            "in_stock": item.inStock,
         })
 
-    order_info = []
-    order_info.append({
+    
+    order_info = {
+        "id": order.id,
         "status": order.status,
         "building": order.building,
         "roomnum": order.roomnum,
         "note": order.note,
         "price": order.price,
         "time_placed": order.time_placed,
-    })
+        "delivererer": deliv.name,
+    }
 
     cust_info = []
     cust_info.append({
@@ -478,7 +494,7 @@ def orderdetails():
         "email": cust.email,
     })
 
-    return render_template('orderdetails.html', item_info=item_info, order_info=order_info, cust_info=cust_info)
+    return render_template('orderdetails.html', item_info=item_info, order=order_info, cust_info=cust_info)
 
 
 @app.route("/dashboard")
