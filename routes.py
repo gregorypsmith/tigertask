@@ -404,7 +404,7 @@ def claimorder():
         db.session.commit()
 
         cust = order.Customer
-        msg = Message("Order Placed!",
+        msg = Message("Order Claimed!",
             sender=admin_mail,
             recipients=[cust.email])
         msg.body = "Hello!\n\nGood news! Your order has been claimed. Your deliverer is "
