@@ -402,8 +402,8 @@ def claimorder():
         msg = Message("Order Claimed!",
             sender=admin_mail,
             recipients=[cust.email])
-        msg.body = "Hello!\n\nGood news! Your order has been claimed. Your deliverer is <b>"
-        msg.body += deliv.name + "</b> and their phone number is " + deliv.phone_number + "."
+        msg.body = "Hello!\n\nGood news! Your order has been claimed. Your deliverer is "
+        msg.body += deliv.name + " and their phone number is " + deliv.phone_number + "."
         msg.body += "\n\nOnce your order is delivered, make sure to confirm it under the 'Orders' page on tigertask.herokuapp.com."
         msg.body += "\n\nBest,\nTigerTask Team"
         mail.send(msg)
