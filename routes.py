@@ -1,6 +1,7 @@
 from app import app, db, mail
 from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
 from flask import render_template, request, make_response, redirect
+from flask_mail import Message
 from flask_sslify import SSLify
 from CASClient import CASClient
 from datetime import datetime
@@ -13,6 +14,7 @@ DELIVERED = "Delivered"
 WAITING = "Waiting for Deliverer"
 
 sslify = SSLify(app)
+admin_mail = os.environ.get('MAIL_USERNAME')
 
 @app.route("/")
 @app.route("/index")
@@ -323,13 +325,14 @@ def placeorder():
             db.session.add(deliverer)
             db.session.commit()
 
-    canceled = request.args.get('canceled')
-    if canceled is not None:
-        removed_order = Order.query.filter_by(id=canceled).first()
-        if removed_order is not None:
-            print("removing order")
-            db.session.delete(removed_order)
-            db.session.commit()
+    # MOVED TO OWN ROUTE BELOW
+    # canceled = request.args.get('canceled')
+    # if canceled is not None:
+    #     removed_order = Order.query.filter_by(id=canceled).first()
+    #     if removed_order is not None:
+    #         print("removing order")
+    #         db.session.delete(removed_order)
+    #         db.session.commit()
 
     orders = Order.query.filter_by(Customer=cust).all()
     result = []
@@ -345,7 +348,47 @@ def placeorder():
             "deliverer": deliverer,
             "status": order.status,
         })
+
+
+    msg = Message("Order Placed!",
+        sender=admin_mail,
+        recipients=[cust.email])
+    msg.body = """ Hello!
+
+    Your order with TigerTask has been placed! Stay tuned for more updates.
+
+    If you have any questions, feel free to email us at tigertask.princeton@gmail.com.
+
+    Best,
+    TigerTask Team """
+    mail.send(msg)
+
     return render_template('orders.html', orders=result, status="All")
+
+@app.route("/cancelorder")
+def cancelorder():
+
+    username = CASClient().authenticate()
+    cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
+
+    canceled_order_id = request.args.get('order_id')
+    canceled_order = Order.query.filter_by(id=canceled_order_id).first()
+
+    if canceled_order is not None:
+        canceled_order_items = OrderItem.query.filter_by(Order=canceled_order).all()
+        for item in canceled_order_items:
+            db.session.delete(item)
+        db.session.delete(canceled_order)
+
+    db.session.commit()
+
+    # Flask refund
+
+    # Render some template
+
+
+
+
 
 @app.route("/claimorder")
 def claimorder():
@@ -359,6 +402,15 @@ def claimorder():
         order.status = "Being Delivered"
         order.Deliverer = deliv
         db.session.commit()
+
+        cust = order.Customer
+        msg = Message("Order Placed!",
+            sender=admin_mail,
+            recipients=[cust.email])
+        msg.body = "Hello!\n\nGood news! Your order has been claimed. Your deliverer is "
+        msg.body += deliv.name + " and their phone number is " + deliv.phone_number
+        msg.body += " if you need to contact them for any reason.\n\nBest,\nTigerTask Team"
+        mail.send(msg)
 
 
     orders = Order.query.filter_by(status="Waiting for Deliverer").all()
