@@ -13,6 +13,8 @@ BEING_DELIVERED = "Being Delivered"
 DELIVERED = "Delivered"
 WAITING = "Waiting for Deliverer"
 
+categories = ['All', 'Food', 'Kitchenware', 'Medicine', 'Toiletries', 'Cleaning Supplies']
+
 sslify = SSLify(app)
 admin_mail = os.environ.get('MAIL_USERNAME')
 
@@ -65,6 +67,7 @@ def homecustomer():
     username = CASClient().authenticate()
         
     query = request.args.get('query')
+    # check the arguments, and then cookies for the category
     category = request.args.get('category')
 
     if query is None:
@@ -127,7 +130,6 @@ def homecustomer():
     )
 
     response = make_response(html)
-
     return response
 
 @app.route("/homedeliver")
@@ -399,6 +401,7 @@ def claimorder():
         db.session.commit()
 
         cust = order.Customer
+
         msg = Message("Order Claimed!",
             sender=admin_mail,
             recipients=[cust.email])
@@ -406,6 +409,7 @@ def claimorder():
         msg.body += deliv.name + " and their phone number is " + deliv.phone_number + "."
         msg.body += "\n\nOnce your order is delivered, make sure to confirm it under the 'Orders' page on tigertask.herokuapp.com."
         msg.body += "\n\nBest,\nTigerTask Team"
+
         mail.send(msg)
 
 
@@ -447,6 +451,23 @@ def orders():
             deliverer.balance += delivered.price
 
             db.session.commit()
+
+            # send an email noting successful delivery
+            msg = Message("Order Delivered!",
+                sender=admin_mail,
+                recipients=[cust.email])
+            msg.body = "Thank you for using TigerTask!. "
+            msg.body += "\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+            msg.body += "\n\nBest,\nTigerTask Team "
+            mail.send(msg)
+
+            msg = Message("Order Delivered!",
+                sender=admin_mail,
+                recipients=[deliverer.email])
+            msg.body = "Your customer marked his item as delivered. Thank your for your work!"
+            msg.body += "\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+            msg.body += "\n\nBest,\nTigerTask Team "
+            mail.send(msg)
 
     canceled = request.args.get('canceled')
     if canceled is not None:
@@ -549,4 +570,23 @@ def orderdetails():
 def dashboard():
     username = CASClient().authenticate()
     deliverer = Deliverer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
-    return render_template('dashboard.html', subtotal=deliverer.balance)
+    customer = Customer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
+
+    message = ""
+
+    # get the phone number if edited
+    phone_number = request.args.get('phone')
+    if phone_number: 
+        customer.phone_number = phone_number
+        deliverer.phone_number = phone_number
+        db.session.add(deliverer)
+        db.session.add(customer)
+        message = "Your profile has been updated."
+     # get the venmo if edited
+    venmo = request.args.get('venmo')
+    if venmo:
+        deliverer.venmo = venmo
+        db.session.add(deliverer)
+        message = "Your profile has been updated."
+
+    return render_template('dashboard.html',message=message, person=deliverer, subtotal=deliverer.balance)
