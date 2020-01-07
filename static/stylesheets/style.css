@@ -3,20 +3,13 @@ html, body {
     width: 100%;
 }
 
-.full-page {
-    padding-top: 15vh;
-}
-
-.form-label-align {
-    text-align: left;
-}
-
 .quantity-select {
     max-width: 6em;
 }
 
 .home-btn {
-    width: 7.5em;
+    width: 12em;
+    min-width: fit-content;
 }
 
 input:read-only.read-only-white {
