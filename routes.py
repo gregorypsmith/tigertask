@@ -112,7 +112,7 @@ def homecustomer():
         db.session.commit()
     
     else:
-        item.quantity = item.quantity + int(quant)
+        item.quantity = int(quant)
         db.session.commit()
     
     addedMsg=''
@@ -183,6 +183,15 @@ def cart():
 
     email = username.strip() + "@princeton.edu"
     cust = Customer.query.filter_by(email=email).first()
+
+    # change item quantity within cart (same as /homecustomer route)
+    itemid = request.args.get('added')
+    if itemid is not None:
+        item = CartItem.query.filter_by(Customer=cust, itemid=itemid).first()
+        quant = request.args.get('quantity')
+        if quant is not None:
+            item.quantity = int(quant)
+            db.session.commit()
 
     removed_id = request.args.get('removed_id')
     if removed_id is not None:
