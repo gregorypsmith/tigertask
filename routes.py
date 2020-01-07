@@ -590,3 +590,28 @@ def dashboard():
         message = "Your profile has been updated."
 
     return render_template('dashboard.html',message=message, person=deliverer, subtotal=deliverer.balance)
+
+@app.route("/account")
+def account():
+    username = CASClient().authenticate()
+    deliverer = Deliverer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
+    customer = Customer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
+
+    message = ""
+
+    # get the phone number if edited
+    phone_number = request.args.get('phone')
+    if phone_number: 
+        customer.phone_number = phone_number
+        deliverer.phone_number = phone_number
+        db.session.add(deliverer)
+        db.session.add(customer)
+        message = "Your profile has been updated."
+     # get the venmo if edited
+    venmo = request.args.get('venmo')
+    if venmo:
+        deliverer.venmo = venmo
+        db.session.add(deliverer)
+        message = "Your profile has been updated."
+
+    return render_template('account.html',message=message, person=deliverer)

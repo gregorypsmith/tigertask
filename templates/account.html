@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard{% endblock title %}
+{% block title %}Account{% endblock title %}
 
 {% block content %}
 <!-- Modal -->
 <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <form action="/dashboard" method="GET">
+        <form action="/account" method="GET">
         <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Edit My Profile</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -32,32 +32,11 @@
     </div>
     </div>
 </div>
-{% include 'navbardeliver.html' %}
+{% include 'navbarcustomer.html' %}
 <div class="container">
-    <h4 class="mb-4">Your dashboard</h4>
+    <h4 class="mb-4">Your account</h4>
     <div class="row">
-        <div class="col-md-4 col-lg-3">
-            <!-- Deliverer balance card -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Balance</h5>
-                    <form action="" method="GET">
-                        <table class="table table-borderless">
-                            <tbody>
-                                <tr>
-                                    <td scope="row">Total:</td>
-                                    <td>${{subtotal}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="d-flex">
-                            <button class="btn btn-primary flex-fill" type="submit">Transfer to bank</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 col-lg-9">
+        <div class="col-sm-12">
             {% if message %}
             <div class="alert alert-success alert-dismissible" role="alert">
                 {{message}}

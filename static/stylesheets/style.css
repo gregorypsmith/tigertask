@@ -14,3 +14,7 @@ html, body {
 .quantity-select {
     max-width: 6em;
 }
+
+.home-btn {
+    width: 8em;
+}

@@ -39,16 +39,18 @@
                             <p class="card-text"><strong>Location</strong><br> {{result.building}} {{result.roomnum}}</p>
                             <p class="card-text"><strong>Price</strong><br> ${{result.price}}</p>
                             <p class="card-text"><strong>Time placed</strong><br> {{result.time_placed}}</p>
-                            <div class="d-flex flex-wrap">
-                                <form action="/orderdetails" method="GET">
-                                    <input type="hidden" name="details_id" value="{{result.id}}">
-                                    <button class="btn btn-primary" type="submit">See details</button>
-                                </form>
-                                <form action="/claimorder" method="GET" class="ml-auto">
-                                    <input type="hidden" name="claimed_id" value="{{result.id}}">
-                                    <button class="btn btn-primary" type="submit">Claim order</button>
-                                </form>
-                            </div>
+                            <form class="mb-2" action="/orderdetails" method="GET">
+                                <input type="hidden" name="details_id" value="{{result.id}}">
+                                <div class="d-flex">
+                                    <button class="btn btn-outline-primary flex-fill" type="submit">See details</button>
+                                </div>
+                            </form>
+                            <form action="/claimorder" method="GET" class="ml-auto">
+                                <input type="hidden" name="claimed_id" value="{{result.id}}">
+                                <div class="d-flex">
+                                    <button class="btn btn-primary flex-fill" type="submit">Claim order</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
