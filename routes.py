@@ -539,6 +539,7 @@ def orderdetails():
            db.session.commit()
 
     item_info = []
+    subtotal = 0
     for orderitem in orderitems:
 
         item = orderitem.Item #Item.query.filter_by(id=orderitem.itemid).first()
@@ -552,6 +553,7 @@ def orderdetails():
             "quantity": orderitem.quantity,
             "in_stock": item.inStock,
         })
+        subtotal += item.price * orderitem.quantity
 
     
     order_info = {
@@ -572,7 +574,7 @@ def orderdetails():
         "email": cust.email,
     })
 
-    return render_template('orderdetails.html', item_info=item_info, order=order_info, cust_info=cust_info)
+    return render_template('orderdetails.html', subtotal = subtotal, item_info=item_info, order=order_info, cust_info=cust_info)
 
 
 @app.route("/dashboard")

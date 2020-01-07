@@ -5,31 +5,65 @@
 {% block content %}
 {% include 'navbardeliver.html' %}
 <div class="container">
-    <h4 class="mb-4">Order details</h4>
+    <h4 class="mb-4">Order placed {{order.time_placed}}</h4>
     <div class="row">
         <div class="col-md-4 col-lg-3">
-            <!-- Customer info card -->
-            {% for cust in cust_info %}
+            <!-- Order summary card -->
             <div class="card mb-4">
                 <div class="card-body">
-                    <h5 class="card-title">Customer info</h5>
-                    <p class="card-text"><strong>Name</strong><br> {{cust.name}}</p>
-                    <p class="card-text"><strong>Phone number</strong><br> {{cust.phone_number}}</p>
-                    <p class="card-text"><strong>Email</strong><br> {{cust.email}}</p>
+                    <h5 class="card-title">Summary</h5>
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td scope="row">Item total:</td>
+                                <td>${{subtotal}}</td>
+                            </tr>
+                            <tr>
+                                <td scope="row">Delivery Fee:</td>
+                                <td>${{order.price}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            {% endfor %}
-
-            <!-- Order info card -->
+            <!-- Delivery info card -->
             <div class="card mb-4">
                 <div class="card-body">
-                    <h5 class="card-title">Order info</h5>
-                    <p class="card-text"><strong>Status</strong><br> {{order.status}} </p>
-                    <p class="card-text"><strong>Building</strong><br> {{order.building}} </p>
-                    <p class="card-text"><strong>Room number</strong><br> {{order.roomnum}} </p>
+                    <h5 class="card-title">Deliver to</h5>
+                    {% for cust in cust_info %}
+                    <p class="card-text"><strong>Name</strong><br> <a data-toggle="modal" href="#custInfoModal">{{cust.name}}</a></p>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="custInfoModal" tabindex="-1" role="dialog" aria-labelledby="custInfoModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="custInfoModalLabel">{{cust.name}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><strong>Phone number</strong><br> {{cust.phone_number}}</p>
+                                    <p><strong>Email</strong><br> {{cust.email}}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close info</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="card-text"><strong>Location</strong><br> {{order.building}} {{order.roomnum}}</p>
                     <p class="card-text"><strong>Note</strong><br> {{order.note}} </p>
-                    <p class="card-text"><strong>Price</strong><br> ${{order.price}} </p>
-                    <p class="card-text"><strong>Time placed</strong><br> {{order.time_placed}} </p>
+                    <p class="card-text"><strong>Status</strong><br> {{order.status}} </p>
+                    {% endfor %}
+                    <form action="/claimorder" method="GET" class="ml-auto">
+                        <input type="hidden" name="claimed_id" value="{{order.id}}">
+                        <div class="d-flex">
+                            <button class="btn btn-primary flex-fill" type="submit">Claim order</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -38,19 +72,27 @@
                 <!-- Item cards -->
                 {% for item in item_info %}
                 <div class="col-md-6 col-lg-4 mb-4">
+                    <!-- item cards -->
                     <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">Item info</h5>
-                            <p class="card-text"><strong>Item name</strong><br> {{item.name}}</p>
-                            <p class="card-text"><strong>Total price</strong><br> ${{item.total_price}}</p>
-                            <p class="card-text"><strong>Price</strong><br> ${{item.price}}</p>
-                            <p class="card-text"><strong>Quantity</strong><br> {{item.quantity}}</p>
-                            {% if item.in_stock == "True" %}
-                            <a href="/orderdetails?details_id={{order.id}}&out_of_stock_id={{item.id}}">Mark as Out of Stock</a>
-                            {% else %}
-                            <a href="/orderdetails?details_id={{order.id}}&in_stock_id={{item.id}}">Mark as In Stock</a>
-                            {% endif %}
-
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{item.name}}</h5>
+                            <div class="mt-auto">
+                                <div class="d-flex flex-wrap align-items-center mb-2">
+                                    <h5 class="card-subtitle font-weight-normal mt-0">${{item.price}}</h5>
+                                    <select id="disabledSelect" class="form-control quantity-select ml-auto" disabled>
+                                        <option>{{item.quantity}}</option>
+                                    </select>
+                                </div>
+                                {% if item.in_stock == "True" %}
+                                <div class="d-flex">
+                                    <a href="/orderdetails?details_id={{order.id}}&out_of_stock_id={{item.id}}" class="btn btn-danger flex-fill">Mark item as out of stock</a>
+                                </div>
+                                {% else %}
+                                <div class="d-flex">
+                                    <a href="/orderdetails?details_id={{order.id}}&in_stock_id={{item.id}}" class="btn btn-success flex-fill">Mark item as in stock</a>
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
