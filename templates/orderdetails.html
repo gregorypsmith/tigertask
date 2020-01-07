@@ -57,13 +57,15 @@
                     <p class="card-text"><strong>Location</strong><br> {{order.building}} {{order.roomnum}}</p>
                     <p class="card-text"><strong>Note</strong><br> {{order.note}} </p>
                     <p class="card-text"><strong>Status</strong><br> {{order.status}} </p>
-                    {% endfor %}
+                    {% if order.status == "Waiting for Deliverer" %}
                     <form action="/claimorder" method="GET" class="ml-auto">
                         <input type="hidden" name="claimed_id" value="{{order.id}}">
                         <div class="d-flex">
                             <button class="btn btn-primary flex-fill" type="submit">Claim order</button>
                         </div>
                     </form>
+                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         </div>
