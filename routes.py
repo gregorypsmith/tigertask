@@ -555,6 +555,7 @@ def orderdetails():
         })
         subtotal += item.price * orderitem.quantity
 
+    subtotal = '%.2f'%(subtotal)
     
     order_info = {
         "id": order.id,

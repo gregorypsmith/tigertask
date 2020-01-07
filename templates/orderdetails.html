@@ -79,9 +79,10 @@
                             <div class="mt-auto">
                                 <div class="d-flex flex-wrap align-items-center mb-2">
                                     <h5 class="card-subtitle font-weight-normal mt-0">${{item.price}}</h5>
-                                    <select id="disabledSelect" class="form-control quantity-select ml-auto" disabled>
-                                        <option>{{item.quantity}}</option>
-                                    </select>
+                                    <div class="d-flex align-items-center ml-auto quantity-select">
+                                        <h5 class="card-subtitle font-weight-normal mt-0 mr-2">Qty</h5>
+                                        <input class="form-control" type="text" placeholder="{{item.quantity}}" readonly>
+                                    </div>
                                 </div>
                                 {% if item.in_stock == "True" %}
                                 <div class="d-flex">
