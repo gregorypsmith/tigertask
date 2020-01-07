@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Order details{% endblock title %}
+{% block title %}Order Details{% endblock title %}
 
 {% block content %}
 {% include 'navbardeliver.html' %}
 <div class="container">
-    <h4 class="mb-4">Order placed {{order.time_placed}}</h4>
+    <h4 class="mb-4">Order #{{order.id}} placed at {{order.time_placed}}</h4>
     <div class="row">
         <div class="col-md-4 col-lg-3">
             <!-- Order summary card -->

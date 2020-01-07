@@ -16,9 +16,13 @@ html, body {
 }
 
 .home-btn {
-    width: 8em;
+    width: 7.5em;
 }
 
 input:read-only.read-only-white {
     background-color: #fff;
+}
+
+#createAccount {
+    width: max-content;
 }
