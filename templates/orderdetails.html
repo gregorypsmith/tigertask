@@ -81,16 +81,16 @@
                                     <h5 class="card-subtitle font-weight-normal mt-0">${{item.price}}</h5>
                                     <div class="d-flex align-items-center ml-auto quantity-select">
                                         <h5 class="card-subtitle font-weight-normal mt-0 mr-2">Qty</h5>
-                                        <input class="form-control" type="text" placeholder="{{item.quantity}}" readonly>
+                                        <input class="form-control read-only-white" type="text" value="{{item.quantity}}" readonly>
                                     </div>
                                 </div>
                                 {% if item.in_stock == "True" %}
                                 <div class="d-flex">
-                                    <a href="/orderdetails?details_id={{order.id}}&out_of_stock_id={{item.id}}" class="btn btn-danger flex-fill">Mark item as out of stock</a>
+                                    <a href="/orderdetails?details_id={{order.id}}&out_of_stock_id={{item.id}}" class="btn btn-danger flex-fill">Mark out of stock</a>
                                 </div>
                                 {% else %}
                                 <div class="d-flex">
-                                    <a href="/orderdetails?details_id={{order.id}}&in_stock_id={{item.id}}" class="btn btn-success flex-fill">Mark item as in stock</a>
+                                    <a href="/orderdetails?details_id={{order.id}}&in_stock_id={{item.id}}" class="btn btn-success flex-fill">Mark in stock</a>
                                 </div>
                                 {% endif %}
                             </div>

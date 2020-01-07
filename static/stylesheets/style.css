@@ -18,3 +18,7 @@ html, body {
 .home-btn {
     width: 8em;
 }
+
+input:read-only.read-only-white {
+    background-color: #fff;
+}
