@@ -645,6 +645,10 @@ def dashboard():
     phone_number = request.args.get('phone')
     venmo = request.args.get('venmo')
     if first_name and last_name and phone_number and venmo:
+
+        if not re.search(PHONE_REGEXP, phone_number):
+           return render_template('account.html',message="", person=deliverer, error="Failed to update profile. Please provide a US number of the form xxx-xxx-xxxx")
+        
         # update customer table
         customer.first_name = first_name
         customer.last_name = last_name
@@ -663,8 +667,6 @@ def dashboard():
         db.session.commit()
         message = "Your profile has been updated."
 
-        if not re.search(PHONE_REGEXP, phone_number):
-           return render_template('account.html',message="", person=deliverer, error="Failed to update profile. Please provide a US number of the form xxx-xxx-xxxx")
 
     return render_template('dashboard.html',message=message, person=deliverer, error="")
 
