@@ -453,7 +453,7 @@ def orders():
         msg.body += "Amount: " + removed_order.price
         mail.send(msg)
 
-        msg = Message("Order Cancelled"
+        msg = Message("Order Cancelled",
                 sender=admin_mail,
                 recipients=[customer.email])
         msg.body = "Hello!"
