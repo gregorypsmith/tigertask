@@ -384,7 +384,6 @@ def claimorder():
         msg.body += deliv.first_name + " " + deliv.last_name + " and their phone number is " + deliv.phone_number + "."
         msg.body += "\n\nOnce your order is delivered, make sure to confirm it under the 'Orders' page on tigertask.herokuapp.com."
         msg.body += "\n\nBest,\nTigerTask Team"
-
         mail.send(msg)
 
 
