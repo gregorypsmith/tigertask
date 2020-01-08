@@ -10,7 +10,11 @@
     <p class='font-weight-bold'> How do I place an order?</p>
 
     <p>1. Navigate to the ‘Browse’ page and add the items that you’d like to purchase to your cart using the ‘Add to cart’ button. You may add up to five of any item to your cart at once.</p>
-    <img src="{{ url_for('static',filename='screenshots/place_order_step_1.jpg') }}"
+    <div class="d-flex justify-content-center">
+        <div class="col-sm-12 col-md-6">
+            <img src="{{ url_for('static',filename='screenshots/place_order_step_1.jpg') }}" class="img-fluid">
+        </div>
+    </div>
     <p>2. When you have finished adding items to your cart, review your cart by navigating to the ‘Cart’ tab. On this page, you can remove items from your cart and view the total cost of your order.</p>
     
     <p>3. When you are ready to place your order, select your building from the dropdown list, enter your room number, and enter any special delivery instructions (if you’d like). Then, hit the ‘place your order’ button.</p>
