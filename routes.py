@@ -655,7 +655,6 @@ def dashboard():
         db.session.commit()
         message = "Your profile has been updated."
 
-
     return render_template('dashboard.html',message=message, person=deliverer, error="")
 
 @app.route("/account")
