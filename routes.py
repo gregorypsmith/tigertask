@@ -512,15 +512,39 @@ def orderdetails():
      # orderitem id of an item that is being marked out of stock
     out_of_stock_id = request.args.get('out_of_stock_id')
     if out_of_stock_id is not None:
-       orderItem = OrderItem.query.get(out_of_stock_id)
-       if orderItem:
-           orderItem.Item.inStock = "False" 
-           db.session.commit()
+        orderItem = OrderItem.query.get(id=out_of_stock_id)
+        item = orderItem.Item
+        total_price = orderItem.quantity * item.price
+
+        msg = Message("Item Out of Stock",
+                sender=admin_mail,
+                recipients=[cust.email])
+        msg.body = "Hello!"
+        msg.body += "\n\nUnfortunately, one of the items you ordered is out of stock."
+        msg.body += "\n\nItem Name: " + item.name
+        msg.body += "\nQuantity: " + orderItem.quantity
+        msg.body += "\nTotal Price: " + total_price
+        msg.body += "\n\nYou will receive a Venmo refund with the amount paid within 24 hours. We apologize for the inconvenience!"
+        msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+        msg.body += "\n\nBest,\nTigerTask Team"
+        mail.send(msg)
+
+        msg = Message("Item Out of Stock",
+                sender=admin_mail,
+                recipients=[admin_mail])
+        msg.body = "A customer has an item out of stock."
+        msg.body += "\n\nVenmo: " + cust.venmo
+        msg.body += "\nAmount: " + total_price
+        mail.send(msg)
+
+        if orderItem:
+            orderItem.Item.inStock = "False" 
+            db.session.commit()
 
      # orderitem id of an item that is being marked out of stock
     in_stock_id = request.args.get('in_stock_id')
     if in_stock_id is not None:
-       orderItem = OrderItem.query.get(in_stock_id)
+       orderItem = OrderItem.query.get(id=in_stock_id)
        if orderItem:
            orderItem.Item.inStock = "True" 
            db.session.commit()
