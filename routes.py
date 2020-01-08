@@ -146,13 +146,14 @@ def homedeliver():
     results = []
     for order in orders:
         cust = Customer.query.filter_by(id=order.custid).first()
+        total = '%.2f'%(order.price)
         results.append({
             "id": order.id,
             "name": "%s %s" % (cust.first_name, cust.last_name),
             "phone_number": cust.phone_number,
             "building": order.building,
             "roomnum": order.roomnum,
-            "price": order.price,
+            "price": total,
             "time_placed": order.time_placed,
         })
 
@@ -506,35 +507,64 @@ def orderdetails():
      # orderitem id of an item that is being marked out of stock
     out_of_stock_id = request.args.get('out_of_stock_id')
     if out_of_stock_id is not None:
-        orderItem = OrderItem.query.get(out_of_stock_id)
-        item = orderItem.Item
-        total_price = orderItem.quantity * item.price
+        orderitem = OrderItem.query.get(out_of_stock_id)
+        item = orderitem.Item
+        total_price = orderitem.quantity * item.price
 
-        msg = Message("Item Out of Stock",
-                sender=admin_mail,
-                recipients=[cust.email])
-        msg.body = "Hello!"
-        msg.body += "\n\nUnfortunately, one of the items you ordered is out of stock."
-        msg.body += "\n\nItem Name: " + item.name
-        msg.body += "\nQuantity: " + str(orderItem.quantity)
-        msg.body += "\nTotal Price: " + str(total_price)
-        msg.body += "\n\nYou will receive a Venmo refund with the amount paid for this item within 24 hours. The rest of your order is still on the way. We apologize for the inconvenience!"
-        msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
-        msg.body += "\n\nBest,\nTigerTask Team"
-        mail.send(msg)
+        if len(orderitems) == 0:
+            msg = Message("Item Out of Stock",
+                    sender=admin_mail,
+                    recipients=[cust.email])
+            msg.body = "Hello!"
+            msg.body += "\n\nUnfortunately, the item that you purchased is out of stock."
+            msg.body += "\n\nItem Name: " + item.name
+            msg.body += "\nQuantity: " + str(orderitem.quantity)
+            msg.body += "\nOrder Total: " + str(order.price)
+            msg.body += "\n\nYou will receive a Venmo refund for the full amount of this order within 24 hours. We apologize sincerely for this inconvenience."
+            msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+            msg.body += "\n\nBest,\nTigerTask Team"
+            mail.send(msg)
 
-        msg = Message("Item Out of Stock",
-                sender=admin_mail,
-                recipients=[admin_mail])
-        msg.body = "A customer has an item out of stock."
-        msg.body += "\n\nVenmo: " + cust.venmo
-        msg.body += "\nAmount: " + str(total_price)
-        mail.send(msg)
+            msg = Message("Item Out of Stock - Order Cancelled",
+                    sender=admin_mail,
+                    recipients=[admin_mail])
+            msg.body = "A customer has an item out of stock, and their order was cancelled."
+            msg.body += "\n\nVenmo: " + cust.venmo
+            msg.body += "\nAmount: " + str(order.price)
+            mail.send(msg)
 
-        if orderItem:
-            orderItem.Item.inStock = "False" 
-            orderItem.Order.price = orderItem.Order.price - total_price
-            db.session.delete(orderItem)
+            orderitem.Item.inStock = "False" 
+            db.session.delete(orderitem)
+            db.session.delete(order)
+            db.session.commit()
+
+            return redirect(url_for('homedeliver'))
+
+        else:
+            msg = Message("Item Out of Stock",
+                    sender=admin_mail,
+                    recipients=[cust.email])
+            msg.body = "Hello!"
+            msg.body += "\n\nUnfortunately, one of the items you ordered is out of stock."
+            msg.body += "\n\nItem Name: " + item.name
+            msg.body += "\nQuantity: " + str(orderitem.quantity)
+            msg.body += "\nTotal Price: " + str(total_price)
+            msg.body += "\n\nYou will receive a Venmo refund with the amount paid for this item within 24 hours. The rest of your order is still on the way. We apologize for the inconvenience!"
+            msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+            msg.body += "\n\nBest,\nTigerTask Team"
+            mail.send(msg)
+
+            msg = Message("Item Out of Stock",
+                    sender=admin_mail,
+                    recipients=[admin_mail])
+            msg.body = "A customer has an item out of stock."
+            msg.body += "\n\nVenmo: " + cust.venmo
+            msg.body += "\nAmount: " + str(total_price)
+            mail.send(msg)
+
+            orderitem.Item.inStock = "False"
+            order.price = order.price - total_price
+            db.session.delete(orderitem)
             db.session.commit()
 
      # orderitem id of an item that is being marked out of stock
@@ -564,6 +594,7 @@ def orderdetails():
 
     deliverer_fee = '%.2f'%(order.price - subtotal)
     subtotal = '%.2f'%(subtotal)
+    total = '%.2f'%(order.price)
     
     order_info = {
         "id": order.id,
@@ -585,7 +616,7 @@ def orderdetails():
         "email": cust.email,
     })
 
-    return render_template('orderdetails.html', subtotal = subtotal, deliverer_fee = deliverer_fee, item_info=item_info, order=order_info, cust_info=cust_info)
+    return render_template('orderdetails.html', subtotal = subtotal, deliverer_fee = deliverer_fee, total=total, item_info=item_info, order=order_info, cust_info=cust_info)
 
 
 @app.route("/dashboard")
