@@ -222,7 +222,7 @@ def cart():
             })
             subtotal += item.price * cart_item.quantity
 
-        fee = max(2.00, 0.17 * subtotal)
+        fee = max(1.99, 0.17 * subtotal)
     
     total = '%.2f'%(subtotal + fee)
     subtotal = '%.2f'%(subtotal)
@@ -292,12 +292,7 @@ def placeorder():
         if item is not None:
             subtotal += item.price * cart_item.quantity
 
-        if subtotal > 0:
-            fee = 1.99
-        if subtotal > 10:
-            fee = 2.99
-        if subtotal > 25:
-            fee = 3.99
+        fee = max(1.99, 0.17 * subtotal)
     
     total = '%.2f'%(subtotal + fee)
     building = request.args.get('building')
@@ -565,8 +560,8 @@ def orderdetails():
         })
         subtotal += item.price * orderitem.quantity
 
-    subtotal = '%.2f'%(subtotal)
     deliverer_fee = '%.2f'%(order.price - subtotal)
+    subtotal = '%.2f'%(subtotal)
     
     order_info = {
         "id": order.id,
