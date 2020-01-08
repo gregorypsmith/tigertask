@@ -169,7 +169,7 @@ def deliveries():
         cust = Customer.query.filter_by(id=order.custid).first()
         results.append({
             "id": order.id,
-            "name": "%s %s" % (order.Customer.first_name, order.Customer.last_name),
+            "name": "Gregory Smith",
             "phone_number": cust.phone_number,
             "building": order.building,
             "roomnum": order.roomnum,
