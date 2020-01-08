@@ -31,7 +31,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Deliver to</h5>
                     {% for cust in cust_info %}
-                    <p class="card-text"><strong>Name</strong><br> <a data-toggle="modal" href="#custInfoModal">{{cust.name}}</a></p>
+                    <p class="card-text"><strong>Name</strong><br> <a data-toggle="modal" href="#custInfoModal">{{cust.first_name}} {{cust.last_name}}</a></p>
 
                     <!-- Modal -->
                     <div class="modal fade" id="custInfoModal" tabindex="-1" role="dialog" aria-labelledby="custInfoModalLabel"
@@ -39,7 +39,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="custInfoModalLabel">{{cust.name}}</h5>
+                                    <h5 class="modal-title" id="custInfoModalLabel">{{cust.first_name}} {{cust.last_name}}</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>

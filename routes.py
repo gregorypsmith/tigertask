@@ -381,7 +381,7 @@ def claimorder():
             sender=admin_mail,
             recipients=[cust.email])
         msg.body = "Hello!\n\nGood news! Your order has been claimed. Your deliverer is "
-        msg.body += deliv.name + " and their phone number is " + deliv.phone_number + "."
+        msg.body += deliv.first_name + " " + deliv.last_name + " and their phone number is " + deliv.phone_number + "."
         msg.body += "\n\nOnce your order is delivered, make sure to confirm it under the 'Orders' page on tigertask.herokuapp.com."
         msg.body += "\n\nBest,\nTigerTask Team"
 
@@ -552,12 +552,14 @@ def orderdetails():
         "note": order.note,
         "price": order.price,
         "time_placed": order.time_placed,
-        "delivererer": deliv.name,
+        "deliverer_first_name": deliv.first_name,
+        "deliverer_last_name": deliv.last_name,
     }
 
     cust_info = []
     cust_info.append({
-        "name": cust.name,
+        "first_name": cust.first_name,
+        "last_name": cust.last_name,
         "phone_number": cust.phone_number,
         "email": cust.email,
     })
