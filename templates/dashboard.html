@@ -64,6 +64,16 @@
 {% include 'navbardeliver.html' %}
 <div class="container">
     <h4 class="mb-4">My Account</h4>
+    {% if message %}
+    <div class="alert alert-success alert-dismissible" role="alert">
+        {{message}}
+    </div>
+    {% endif %}
+    {% if error %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        {{error}}
+    </div>
+    {% endif %}
     <div class="row">
         <div class="col-md-4 col-lg-3">
             <!-- Deliverer balance card -->
@@ -74,7 +84,7 @@
                         <tbody>
                             <tr>
                                 <td scope="row">Total:</td>
-                                <td>${{subtotal}}</td>
+                                <td>${{person.balance}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -84,12 +94,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 col-lg-3">
-            {% if message %}
-            <div class="alert alert-success alert-dismissible" role="alert">
-                {{message}}
-            </div>
-            {% endif %}
+        <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">My profile</h5>

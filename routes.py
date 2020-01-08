@@ -1,6 +1,6 @@
 from app import app, db, mail
 from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
-from flask import render_template, request, make_response, redirect
+from flask import render_template, request, make_response, redirect, url_for
 from flask_mail import Message
 from flask_sslify import SSLify
 from CASClient import CASClient
@@ -8,6 +8,10 @@ from datetime import datetime
 import stripe
 import urllib
 import os 
+import re
+
+PHONE_REGEXP = "^[0-9]{10}$|^[0-9]{3}-[0-9]{3}-[0-9]{4}$"
+VENMO_REGEXP = "@.*"
 
 BEING_DELIVERED = "Being Delivered"
 DELIVERED = "Delivered"
@@ -41,8 +45,14 @@ def createaccount():
     phone = request.args.get('phone')
     venmo = request.args.get('venmo')
 
-    if fname is None or lname is None or phone is None:
-        return render_template('createaccount.html', errorMsg="Please enter your information below.")
+    if not fname and not lname and not phone and not venmo:
+        return render_template('createaccount.html', errorMsg="")
+    elif not fname or not lname or not phone or not venmo:
+        return render_template('createaccount.html', errorMsg="Missing first/last name, phone and/or venmo.")
+    elif not re.search(VENMO_REGEXP, venmo):
+        return render_template('createaccount.html', errorMsg="Invalid venmo. Venmo must start with the '@' character.")
+    elif not re.search(PHONE_REGEXP, phone):
+        return render_template('createaccount.html', errorMsg="Invalid phone number. Number must be US number of the form xxx-xxx-xxxx")
 
     newcust = Customer(
         first_name=fname,
@@ -74,7 +84,7 @@ def homecustomer():
     category = request.args.get('category')
 
     if query is None:
-    	query = ""
+        query = ""
 
     items = Item.query.filter(Item.name.contains(query)).all()
 
@@ -145,14 +155,15 @@ def homedeliver():
 
     results = []
     for order in orders:
-        cust = Customer.query.filter_by(id=order.custid).first()
+        cust = order.Customer
+        total = '%.2f'%(order.price)
         results.append({
             "id": order.id,
             "name": "%s %s" % (cust.first_name, cust.last_name),
             "phone_number": cust.phone_number,
             "building": order.building,
             "roomnum": order.roomnum,
-            "price": order.price,
+            "price": total,
             "time_placed": order.time_placed,
         })
 
@@ -222,10 +233,11 @@ def cart():
             })
             subtotal += item.price * cart_item.quantity
 
-        fee = max(2.00, 0.17 * subtotal)
+        fee = max(1.99, 0.17 * subtotal)
     
     total = '%.2f'%(subtotal + fee)
     subtotal = '%.2f'%(subtotal)
+    fee = '%.2f'%(fee)
 
     buildfile = open(r"buildings.txt", "r")
     buildings = []
@@ -292,12 +304,7 @@ def placeorder():
         if item is not None:
             subtotal += item.price * cart_item.quantity
 
-        if subtotal > 0:
-            fee = 1.99
-        if subtotal > 10:
-            fee = 2.99
-        if subtotal > 25:
-            fee = 3.99
+        fee = max(1.99, 0.17 * subtotal)
     
     total = '%.2f'%(subtotal + fee)
     building = request.args.get('building')
@@ -386,24 +393,7 @@ def claimorder():
         msg.body += "\n\nBest,\nTigerTask Team"
         mail.send(msg)
 
-
-    orders = Order.query.filter_by(status="Waiting for Deliverer").all()
-
-    results = []
-    for order in orders:
-        cust = Customer.query.filter_by(id=order.custid).first()
-        results.append({
-            "id": order.id,
-            "name": "%s %s" % (order.Customer.first_name, order.Customer.last_name),
-            "phone_number": cust.phone_number,
-            "building": order.building,
-            "roomnum": order.roomnum,
-            "price": order.price,
-            "time_placed": order.time_placed,
-            "status": order.status,
-        })
-
-    return render_template('deliveries.html', results=results)
+    return redirect(url_for('deliveries'))
 
 @app.route("/orders")
 def orders():
@@ -511,33 +501,68 @@ def orderdetails():
      # orderitem id of an item that is being marked out of stock
     out_of_stock_id = request.args.get('out_of_stock_id')
     if out_of_stock_id is not None:
-        orderItem = OrderItem.query.get(out_of_stock_id)
-        item = orderItem.Item
-        total_price = orderItem.quantity * item.price
+        orderitem = OrderItem.query.get(out_of_stock_id)
+        item = orderitem.Item
+        total_price = orderitem.quantity * item.price
 
-        msg = Message("Item Out of Stock",
-                sender=admin_mail,
-                recipients=[cust.email])
-        msg.body = "Hello!"
-        msg.body += "\n\nUnfortunately, one of the items you ordered is out of stock."
-        msg.body += "\n\nItem Name: " + item.name
-        msg.body += "\nQuantity: " + orderItem.quantity
-        msg.body += "\nTotal Price: " + total_price
-        msg.body += "\n\nYou will receive a Venmo refund with the amount paid within 24 hours. We apologize for the inconvenience!"
-        msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
-        msg.body += "\n\nBest,\nTigerTask Team"
-        mail.send(msg)
+        i = 0
+        for orderitem in orderitems:
+            i += 1
 
-        msg = Message("Item Out of Stock",
-                sender=admin_mail,
-                recipients=[admin_mail])
-        msg.body = "A customer has an item out of stock."
-        msg.body += "\n\nVenmo: " + cust.venmo
-        msg.body += "\nAmount: " + total_price
-        mail.send(msg)
+        if i == 1:
+            msg = Message("Item Out of Stock",
+                    sender=admin_mail,
+                    recipients=[cust.email])
+            msg.body = "Hello!"
+            msg.body += "\n\nUnfortunately, the item that you purchased is out of stock."
+            msg.body += "\n\nItem Name: " + item.name
+            msg.body += "\nQuantity: " + str(orderitem.quantity)
+            msg.body += "\nOrder Total: " + str(order.price)
+            msg.body += "\n\nYou will receive a Venmo refund for the full amount of this order within 24 hours. We apologize sincerely for this inconvenience."
+            msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+            msg.body += "\n\nBest,\nTigerTask Team"
+            mail.send(msg)
 
-        if orderItem:
-            orderItem.Item.inStock = "False" 
+            msg = Message("Item Out of Stock - Order Cancelled",
+                    sender=admin_mail,
+                    recipients=[admin_mail])
+            msg.body = "A customer has an item out of stock, and their order was cancelled."
+            msg.body += "\n\nVenmo: " + cust.venmo
+            msg.body += "\nAmount: " + str(order.price)
+            mail.send(msg)
+
+            orderitem.Item.inStock = "False" 
+            db.session.delete(orderitem)
+            db.session.delete(order)
+            db.session.commit()
+
+            return redirect(url_for('homedeliver'))
+
+        else:
+            msg = Message("Item Out of Stock",
+                    sender=admin_mail,
+                    recipients=[cust.email])
+            msg.body = "Hello!"
+            msg.body += "\n\nUnfortunately, one of the items you ordered is out of stock."
+            msg.body += "\n\nItem Name: " + item.name
+            msg.body += "\nQuantity: " + str(orderitem.quantity)
+            msg.body += "\nTotal Price: " + str(total_price)
+            msg.body += "\n\nYou will receive a Venmo refund with the amount paid for this item within 24 hours. The rest of your order is still on the way. We apologize for the inconvenience!"
+            msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+            msg.body += "\n\nBest,\nTigerTask Team"
+            mail.send(msg)
+
+            msg = Message("Item Out of Stock",
+                    sender=admin_mail,
+                    recipients=[admin_mail])
+            msg.body = "A customer has an item out of stock."
+            msg.body += "\n\nVenmo: " + cust.venmo
+            msg.body += "\nAmount: " + str(total_price)
+            mail.send(msg)
+
+            orderitem.Item.inStock = "False"
+            order.price = order.price - total_price
+            db.session.delete(orderitem)
             db.session.commit()
 
      # orderitem id of an item that is being marked out of stock
@@ -565,7 +590,9 @@ def orderdetails():
         })
         subtotal += item.price * orderitem.quantity
 
+    deliverer_fee = '%.2f'%(order.price - subtotal)
     subtotal = '%.2f'%(subtotal)
+    total = '%.2f'%(order.price)
     
     order_info = {
         "id": order.id,
@@ -573,7 +600,7 @@ def orderdetails():
         "building": order.building,
         "roomnum": order.roomnum,
         "note": order.note,
-        "price": order.price,
+        "price": total,
         "time_placed": order.time_placed,
         "deliverer_first_name": deliv.first_name,
         "deliverer_last_name": deliv.last_name,
@@ -587,7 +614,7 @@ def orderdetails():
         "email": cust.email,
     })
 
-    return render_template('orderdetails.html', subtotal = subtotal, item_info=item_info, order=order_info, cust_info=cust_info)
+    return render_template('orderdetails.html', subtotal = subtotal, deliverer_fee = deliverer_fee, total = total, item_info=item_info, order=order_info, cust_info=cust_info)
 
 
 @app.route("/dashboard")
@@ -604,6 +631,12 @@ def dashboard():
     phone_number = request.args.get('phone')
     venmo = request.args.get('venmo')
     if first_name and last_name and phone_number and venmo:
+
+        if not re.search(VENMO_REGEXP, venmo):
+            return render_template('dashboard.html',message="", person=deliverer, error="Failed to update profile. Venmo must start with the '@' character.")
+        elif not re.search(PHONE_REGEXP, phone_number):
+           return render_template('dashboard.html',message="", person=deliverer, error="Failed to update profile. Please provide a US number of the form xxx-xxx-xxxx")
+
         # update customer table
         customer.first_name = first_name
         customer.last_name = last_name
@@ -622,7 +655,7 @@ def dashboard():
         db.session.commit()
         message = "Your profile has been updated."
 
-    return render_template('dashboard.html',message=message, person=deliverer, subtotal=deliverer.balance)
+    return render_template('dashboard.html',message=message, person=deliverer, error="")
 
 @app.route("/account")
 def account():
@@ -638,6 +671,12 @@ def account():
     phone_number = request.args.get('phone')
     venmo = request.args.get('venmo')
     if first_name and last_name and phone_number and venmo:
+
+        if not re.search(VENMO_REGEXP, venmo):
+            return render_template('account.html',message="", person=customer, error="Failed to update profile. Venmo must start with the '@' character.")
+        elif not re.search(PHONE_REGEXP, phone_number):
+            return render_template('account.html',message="", person=customer, error="Failed to update profile. Please provide a US number of the form xxx-xxx-xxxx")
+
         # update customer table
         customer.first_name = first_name
         customer.last_name = last_name
@@ -656,5 +695,4 @@ def account():
         db.session.commit()
         message = "Your profile has been updated."
 
-
-    return render_template('account.html',message=message, person=customer)
+    return render_template('account.html',message=message, person=customer, error="")
