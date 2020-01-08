@@ -219,12 +219,7 @@ def cart():
             })
             subtotal += item.price * cart_item.quantity
 
-        if subtotal > 0:
-            fee = 1.99
-        if subtotal > 10:
-            fee = 2.99
-        if subtotal > 25:
-            fee = 3.99
+        fee = max(2.00, 0.17 * subtotal)
     
     total = '%.2f'%(subtotal + fee)
     subtotal = '%.2f'%(subtotal)
