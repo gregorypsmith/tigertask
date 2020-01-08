@@ -520,7 +520,7 @@ def orderdetails():
 
         i = 0
         for orderitem in orderitems:
-            i++
+            i += 1
 
         if i == 0:
             msg = Message("Item Out of Stock",
