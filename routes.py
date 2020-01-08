@@ -269,7 +269,7 @@ def pay():
         'name': 'Confirm Order',
         'description': '''We will get these items to you in a jif! 
         For testing you will be charged $0.50''',
-        'images': ['https://www.cs.princeton.edu/sites/all/modules/custom/cs_people/generate_thumbnail.php?id=12&thumb='],
+        'images': ['http://cdn.shopify.com/s/files/1/2031/4491/files/ustore-logo_e9232cd4-4d9c-4c26-a795-56ea59c4796d.png?v=1542942470'],
         'amount': int(float(total) * 100),
         'currency': 'usd',
         'quantity': 1,
