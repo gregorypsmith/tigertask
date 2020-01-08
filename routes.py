@@ -533,6 +533,8 @@ def orderdetails():
 
         if orderItem:
             orderItem.Item.inStock = "False" 
+            orderItem.Order.price = orderItem.Order.price - total_price
+            db.session.delete(orderItem)
             db.session.commit()
 
      # orderitem id of an item that is being marked out of stock
