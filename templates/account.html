@@ -43,13 +43,18 @@
 {% include 'navbarcustomer.html' %}
 <div class="container">
     <h4 class="mb-4">My Account</h4>
+    {% if message %}
+    <div class="alert alert-success alert-dismissible" role="alert">
+        {{message}}
+    </div>
+    {% endif %}
+    {% if error %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        {{error}}
+    </div>
+    {% endif %}
     <div class="row">
         <div class="col-md-6">
-            {% if message %}
-            <div class="alert alert-success alert-dismissible" role="alert">
-                {{message}}
-            </div>
-            {% endif %}
             <div class="card mb-4">
                 <div class="card-body">
                     <p class="card-text"><strong>Name</strong><br> {{person.first_name}} {{person.last_name}}</p>

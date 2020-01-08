@@ -10,7 +10,12 @@
             <div class="card mx-auto" id="createAccount">
                 <div class="card-body">
                     <h5 class="card-title mb-4">Create an Account</h5>
-                    <h6 class="card-subtitle font-weight-normal text-muted mb-3">{{errorMsg}}</h6>
+                    <h6 class="card-subtitle font-weight-normal text-muted mb-3">Please enter your information below</h6>
+                    {% if errorMsg %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        {{errorMsg}}
+                    </div>
+                    {% endif %}
                     <form>
                         <div class="form-group">
                             <label for="firstNameInput">First name</label>

@@ -8,6 +8,9 @@ from datetime import datetime
 import stripe
 import urllib
 import os 
+import re
+
+PHONE_REGEXP = "^[0-9]{10}$|^[0-9]{3}-[0-9]{3}-[0-9]{4}$"
 
 BEING_DELIVERED = "Being Delivered"
 DELIVERED = "Delivered"
@@ -41,8 +44,12 @@ def createaccount():
     phone = request.args.get('phone')
     venmo = request.args.get('venmo')
 
-    if fname is None or lname is None or phone is None:
-        return render_template('createaccount.html', errorMsg="Please enter your information below.")
+    if not fname and not lname and not phone:
+        return render_template('createaccount.html', errorMsg="")
+    elif not fname or not lname or not phone:
+        return render_template('createaccount.html', errorMsg="Missing first/last name, phone or venmo.")
+    elif not re.search(PHONE_REGEXP, phone):
+        return render_template('createaccount.html', errorMsg="Invalid phone number. Number must be US number of the form xxx-xxx-xxxx")
 
     newcust = Customer(
         first_name=fname,
@@ -74,7 +81,7 @@ def homecustomer():
     category = request.args.get('category')
 
     if query is None:
-    	query = ""
+        query = ""
 
     items = Item.query.filter(Item.name.contains(query)).all()
 
@@ -145,7 +152,7 @@ def homedeliver():
 
     results = []
     for order in orders:
-        cust = Customer.query.filter_by(id=order.custid).first()
+        cust = order.Customer
         total = '%.2f'%(order.price)
         results.append({
             "id": order.id,
@@ -594,7 +601,7 @@ def orderdetails():
 
     deliverer_fee = '%.2f'%(order.price - subtotal)
     subtotal = '%.2f'%(subtotal)
-    total = '%.2f'%(order.price)
+    total = '%.2f'%(total)
     
     order_info = {
         "id": order.id,
@@ -602,7 +609,7 @@ def orderdetails():
         "building": order.building,
         "roomnum": order.roomnum,
         "note": order.note,
-        "price": order.price,
+        "price": total,
         "time_placed": order.time_placed,
         "deliverer_first_name": deliv.first_name,
         "deliverer_last_name": deliv.last_name,
@@ -616,7 +623,7 @@ def orderdetails():
         "email": cust.email,
     })
 
-    return render_template('orderdetails.html', subtotal = subtotal, deliverer_fee = deliverer_fee, total=total, item_info=item_info, order=order_info, cust_info=cust_info)
+    return render_template('orderdetails.html', subtotal = subtotal, deliverer_fee = deliverer_fee, total = total, item_info=item_info, order=order_info, cust_info=cust_info)
 
 
 @app.route("/dashboard")
@@ -651,7 +658,10 @@ def dashboard():
         db.session.commit()
         message = "Your profile has been updated."
 
-    return render_template('dashboard.html',message=message, person=deliverer, subtotal=deliverer.balance)
+        if not re.search(PHONE_REGEXP, phone_number):
+           return render_template('account.html',message="", person=deliverer, error="Failed to update profile. Please provide a US number of the form xxx-xxx-xxxx")
+
+    return render_template('dashboard.html',message=message, person=deliverer, error="")
 
 @app.route("/account")
 def account():
@@ -685,5 +695,7 @@ def account():
         db.session.commit()
         message = "Your profile has been updated."
 
+        if not re.search(PHONE_REGEXP, phone_number):
+            return render_template('account.html',message="", person=customer, error="Failed to update profile. Please provide a US number of the form xxx-xxx-xxxx")
 
-    return render_template('account.html',message=message, person=customer)
+    return render_template('account.html',message=message, person=customer, error="")
