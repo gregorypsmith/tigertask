@@ -483,8 +483,13 @@ def orders():
         removed_order = Order.query.filter_by(id=canceled).first()
         if removed_order is not None:
             print("removing order")
+            canceled_order_items = OrderItem.query.filter_by(Order=removed_order).all()
+            for item in canceled_order_items:
+                db.session.delete(item)
             db.session.delete(removed_order)
             db.session.commit()
+
+
 
     status = request.args.get('status')
     if status is None or status == 'All':
