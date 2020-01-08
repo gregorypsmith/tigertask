@@ -337,15 +337,6 @@ def placeorder():
             db.session.add(deliverer)
             db.session.commit()
 
-    # MOVED TO OWN ROUTE BELOW
-    # canceled = request.args.get('canceled')
-    # if canceled is not None:
-    #     removed_order = Order.query.filter_by(id=canceled).first()
-    #     if removed_order is not None:
-    #         print("removing order")
-    #         db.session.delete(removed_order)
-    #         db.session.commit()
-
     orders = Order.query.filter_by(Customer=cust).all()
     result = []
     for order in orders:
@@ -371,30 +362,6 @@ def placeorder():
     mail.send(msg)
 
     return render_template('orders.html', orders=result, status="All")
-
-@app.route("/cancelorder")
-def cancelorder():
-
-    username = CASClient().authenticate()
-    cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
-
-    canceled_order_id = request.args.get('order_id')
-    canceled_order = Order.query.filter_by(id=canceled_order_id).first()
-
-    if canceled_order is not None:
-        canceled_order_items = OrderItem.query.filter_by(Order=canceled_order).all()
-        for item in canceled_order_items:
-            db.session.delete(item)
-        db.session.delete(canceled_order)
-
-    db.session.commit()
-
-    # Flask refund
-
-    # Render some template
-
-
-
 
 
 @app.route("/claimorder")
