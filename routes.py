@@ -511,7 +511,7 @@ def orderdetails():
      # orderitem id of an item that is being marked out of stock
     out_of_stock_id = request.args.get('out_of_stock_id')
     if out_of_stock_id is not None:
-        orderItem = OrderItem.query.get(id=out_of_stock_id)
+        orderItem = OrderItem.query.get(out_of_stock_id)
         item = orderItem.Item
         total_price = orderItem.quantity * item.price
 
@@ -543,7 +543,7 @@ def orderdetails():
      # orderitem id of an item that is being marked out of stock
     in_stock_id = request.args.get('in_stock_id')
     if in_stock_id is not None:
-       orderItem = OrderItem.query.get(id=in_stock_id)
+       orderItem = OrderItem.query.get(in_stock_id)
        if orderItem:
            orderItem.Item.inStock = "True" 
            db.session.commit()
