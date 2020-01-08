@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Customer FAQ{% endblock title %}
+
+{% block content %}
+{% include 'navbardeliver.html' %}
+<div class='container'>
+    <h1 class='text-center'>Customer FAQ</h1>
+    <br>
+    <p class='font-weight-bold'> How do I place an order?</p>
+
+    <p>1. Navigate to the ‘Browse’ page and add the items that you’d like to purchase to your cart using the ‘Add to cart’ button. You may add up to five of any item to your cart at once.</p>
+    <img src='screenshots/place_order_step_1.jpg'
+    <p>2. When you have finished adding items to your cart, review your cart by navigating to the ‘Cart’ tab. On this page, you can remove items from your cart and view the total cost of your order.</p>
+    
+    <p>3. When you are ready to place your order, select your building from the dropdown list, enter your room number, and enter any special delivery instructions (if you’d like). Then, hit the ‘place your order’ button.</p>
+    
+    <p>4. Next, you will be redirected to Stripe checkout. Enter your name, credit card information, and billing address and click the ‘Pay’ button.</p>
+    
+    <p>5. If your order was successfully placed, you will be redirected to the Orders page and a confirmation will be sent to your Princeton email address with your order information.</p>
+    
+    <p>6. Once your order has been delivered, confirm delivery by clicking the ‘Confirm delivery’ button on the Orders page.</p>
+    <br>
+    
+    <p class='font-weight-bold'>How do I review my order?</p>
+    
+    <p>1. Locate your order number by checking the confirmation email that was sent to your Princeton email address.</p>
+    
+    <p>2. Navigate to the ‘Orders’ page in the top right corner of the screen.</p>
+    
+    <p>3. Find the order with the associated order number on the page.</p>
+    <br>
+    
+    
+    <p class='font-weight-bold'>How do I review the status of my order?</p>
+    
+    <p>1. Follow instructions for the ‘How do I review an order?’ question.</p>
+    
+    <p>2. Your order’s status is located besides the “Status” field.</p>
+    <br>
+    
+    
+    <p class='font-weight-bold'>How do I contact my deliverer?</p>
+    
+    <p>1. Follow instructions for the ‘How do I review an order?’ question.</p>
+    
+    <p>2. If your order has been claimed by a deliverer, the deliverer’s name and phone number will be displayed under the order number.</p>
+    <br>
+    
+    <p class='font-weight-bold'>How do I cancel my order?</p>
+    
+    <p>1. Follow instructions under the ‘How do I review an order?’ question.</p>
+    
+    <p>2. Click the red ‘Cancel Order’ button for the appropriate order.*</p>
+    
+    <p>3. Select ‘Cancel Order’ when you are asked to confirm your cancellation.</p>
+    
+    <p>4. You will receive an email confirming the cancellation of your order, and our staff will refund you through Venmo within 24 hours.</p>
+    
+    <p class='font-weight-light'>*If the ‘Cancel Order’ button is greyed out, this means that a deliverer has already claimed your order and you may no longer cancel.</p>
+    <br>
+    </div>
+{% endblock content %}

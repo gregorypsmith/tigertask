@@ -696,3 +696,11 @@ def account():
         message = "Your profile has been updated."
 
     return render_template('account.html',message=message, person=customer, error="")
+
+@app.route('/helpcustomer')
+def helpcustomer():
+    return render_template('helpcustomer.html')
+
+@app.route('/helpdeliver')
+def helpdeliver():
+    return render_template('helpdeliver.html')
