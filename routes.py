@@ -566,6 +566,7 @@ def orderdetails():
         subtotal += item.price * orderitem.quantity
 
     subtotal = '%.2f'%(subtotal)
+    deliverer_fee = '%.2f'%(order.price - subtotal)
     
     order_info = {
         "id": order.id,
@@ -587,7 +588,7 @@ def orderdetails():
         "email": cust.email,
     })
 
-    return render_template('orderdetails.html', subtotal = subtotal, item_info=item_info, order=order_info, cust_info=cust_info)
+    return render_template('orderdetails.html', subtotal = subtotal, deliverer_fee = deliverer_fee, item_info=item_info, order=order_info, cust_info=cust_info)
 
 
 @app.route("/dashboard")
