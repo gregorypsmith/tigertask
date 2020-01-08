@@ -521,8 +521,8 @@ def orderdetails():
         msg.body = "Hello!"
         msg.body += "\n\nUnfortunately, one of the items you ordered is out of stock."
         msg.body += "\n\nItem Name: " + item.name
-        msg.body += "\nQuantity: " + orderItem.quantity
-        msg.body += "\nTotal Price: " + total_price
+        msg.body += "\nQuantity: " + str(orderItem.quantity)
+        msg.body += "\nTotal Price: " + str(total_price)
         msg.body += "\n\nYou will receive a Venmo refund with the amount paid within 24 hours. We apologize for the inconvenience!"
         msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
         msg.body += "\n\nBest,\nTigerTask Team"
@@ -533,7 +533,7 @@ def orderdetails():
                 recipients=[admin_mail])
         msg.body = "A customer has an item out of stock."
         msg.body += "\n\nVenmo: " + cust.venmo
-        msg.body += "\nAmount: " + total_price
+        msg.body += "\nAmount: " + str(total_price)
         mail.send(msg)
 
         if orderItem:
