@@ -90,6 +90,7 @@ def homecustomer():
             "name": item.name,
             "price": item.price,
             "category": item.category,
+            "in_stock": item.inStock,
         })
 
     # add this item to the cartitems page
@@ -221,12 +222,7 @@ def cart():
             })
             subtotal += item.price * cart_item.quantity
 
-        if subtotal > 0:
-            fee = 1.99
-        if subtotal > 10:
-            fee = 2.99
-        if subtotal > 25:
-            fee = 3.99
+        fee = max(2.00, 0.17 * subtotal)
     
     total = '%.2f'%(subtotal + fee)
     subtotal = '%.2f'%(subtotal)
@@ -271,7 +267,7 @@ def pay():
         'name': 'Confirm Order',
         'description': '''We will get these items to you in a jif! 
         For testing you will be charged $0.50''',
-        'images': ['https://www.cs.princeton.edu/sites/all/modules/custom/cs_people/generate_thumbnail.php?id=12&thumb='],
+        'images': ['http://cdn.shopify.com/s/files/1/2031/4491/files/ustore-logo_e9232cd4-4d9c-4c26-a795-56ea59c4796d.png?v=1542942470'],
         'amount': int(float(total) * 100),
         'currency': 'usd',
         'quantity': 1,
@@ -339,15 +335,6 @@ def placeorder():
             db.session.add(deliverer)
             db.session.commit()
 
-    # MOVED TO OWN ROUTE BELOW
-    # canceled = request.args.get('canceled')
-    # if canceled is not None:
-    #     removed_order = Order.query.filter_by(id=canceled).first()
-    #     if removed_order is not None:
-    #         print("removing order")
-    #         db.session.delete(removed_order)
-    #         db.session.commit()
-
     orders = Order.query.filter_by(Customer=cust).all()
     result = []
     for order in orders:
@@ -373,30 +360,6 @@ def placeorder():
     mail.send(msg)
 
     return render_template('orders.html', orders=result, status="All")
-
-@app.route("/cancelorder")
-def cancelorder():
-
-    username = CASClient().authenticate()
-    cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
-
-    canceled_order_id = request.args.get('order_id')
-    canceled_order = Order.query.filter_by(id=canceled_order_id).first()
-
-    if canceled_order is not None:
-        canceled_order_items = OrderItem.query.filter_by(Order=canceled_order).all()
-        for item in canceled_order_items:
-            db.session.delete(item)
-        db.session.delete(canceled_order)
-
-    db.session.commit()
-
-    # Flask refund
-
-    # Render some template
-
-
-
 
 
 @app.route("/claimorder")
@@ -477,8 +440,8 @@ def orders():
                 sender=admin_mail,
                 recipients=[deliverer.email])
             msg.body = "Your customer marked his item as delivered. Thank your for your work!"
-            msg.body += "\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
-            msg.body += "\n\nBest,\nTigerTask Team "
+            msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+            msg.body += "\n\nBest,\nTigerTask Team"
             mail.send(msg)
 
     canceled = request.args.get('canceled')
@@ -493,6 +456,15 @@ def orders():
         msg.body += "Amount: " + removed_order.price
         mail.send(msg)
 
+        msg = Message("Order Cancelled",
+                sender=admin_mail,
+                recipients=[customer.email])
+        msg.body = "Hello!"
+        msg.body += "\n\nYour TigerTask order has been cancelled. You should expect to receive a venmo refund within the next 24 hours."
+        msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+        msg.body += "\n\nBest,\nTigerTask Team"
+        mail.send(msg)
+
         if removed_order is not None:
             print("removing order")
             canceled_order_items = OrderItem.query.filter_by(Order=removed_order).all()
@@ -500,11 +472,6 @@ def orders():
                 db.session.delete(item)
             db.session.delete(removed_order)
             db.session.commit()
-
-
-
-
-
 
     status = request.args.get('status')
     if status is None or status == 'All':

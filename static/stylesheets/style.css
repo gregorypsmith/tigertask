@@ -17,5 +17,5 @@ input:read-only.read-only-white {
 }
 
 #createAccount {
-    width: max-content;
+   max-width: max-content;
 }
