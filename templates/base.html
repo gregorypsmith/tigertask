@@ -15,12 +15,13 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='stylesheets/style.css') }}">
 
     <!-- Font Awesome icons -->
-    <script src="https://kit.fontawesome.com/67c3876807.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/67c3876807.js" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
 
-    <title>{% block title %}{% endblock title %}</title>
+    <title>TigerTask: {% block title %}{% endblock title %}</title>
 </head>
 
-<body>
+<body>    
     {% block content %}
     {% endblock content %}
 

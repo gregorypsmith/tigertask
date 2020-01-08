@@ -1,19 +1,20 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock title %}
+{% block title %}Browse Items{% endblock title %}
 
 {% block content %}
 {% include 'navbarcustomer.html' %}
 
 <div class="container">
-    <h4 class="mb-4">Browse items</h4>
+    <h4 class="mb-4">Browse Items</h4>
 
     <!-- search bar -->
     <form class="mb-4" action="/homecustomer" method="GET">
         <div class="input-group">
             <input type="search" name="query" class="form-control" value="{{prevQuery}}">
+            <input type="hidden" name="category" class="form-control" value="{{category}}">
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit">
+                <button class="btn btn-primary" type="submit">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -25,22 +26,26 @@
             <!-- category filter -->
             <div class="card mb-4">
                 <div class="card-body pb-3">
-                    <h5 class="card-title mb-0">Filter by</h5>
+                    <h5 class="card-title mb-0">Filter</h5>
                 </div>
                 <div class="list-group list-group-flush pb-2">
-                    <a href="/homecustomer?category=All" class="list-group-item border-0">All</a>
-                    <a href="/homecustomer?category=Food" class="list-group-item border-0">Food</a>
-                    <a href="/homecustomer?category=Kitchenware" class="list-group-item border-0">Kitchenware</a>
-                    <a href="/homecustomer?category=Medicine" class="list-group-item border-0">Medicine</a>
-                    <a href="/homecustomer?category=Toiletries" class="list-group-item border-0">Toiletries</a>
-                    <a href="/homecustomer?category=Cleaning" class="list-group-item border-0">Cleaning supplies</a>
-                    <a href="/homecustomer?category=School" class="list-group-item border-0">School supplies</a>
+                    <a href="/homecustomer?category=All&query={{prevQuery}}" class="list-group-item border-0">All</a>
+                    <a href="/homecustomer?category=Food&query={{prevQuery}}" class="list-group-item border-0">Food</a>
+                    <a href="/homecustomer?category=Kitchenware&query={{prevQuery}}" class="list-group-item border-0">Kitchenware</a>
+                    <a href="/homecustomer?category=Medicine&query={{prevQuery}}" class="list-group-item border-0">Medicine</a>
+                    <a href="/homecustomer?category=Toiletries&query={{prevQuery}}" class="list-group-item border-0">Toiletries</a>
+                    <a href="/homecustomer?category=Cleaning&query={{prevQuery}}" class="list-group-item border-0">Cleaning supplies</a>
+                    <a href="/homecustomer?category=School&query={{prevQuery}}" class="list-group-item border-0">School supplies</a>
                 </div>
             </div>
         </div>
 
         <div class="col-md-8 col-lg-9">
-            <h5 class="text-success m-0">{{addedMsg}}</h5>
+            {% if addedMsg %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                {{addedMsg}}
+            </div>
+            {% endif %}
             <div class="row">
                 {% for item in items %}
                 <div class="col-md-6 col-lg-4 mb-4">

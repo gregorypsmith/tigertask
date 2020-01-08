@@ -1,6 +1,7 @@
 from app import app, db, mail
 from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
 from flask import render_template, request, make_response, redirect
+from flask_mail import Message
 from flask_sslify import SSLify
 from CASClient import CASClient
 from datetime import datetime
@@ -12,7 +13,10 @@ BEING_DELIVERED = "Being Delivered"
 DELIVERED = "Delivered"
 WAITING = "Waiting for Deliverer"
 
+categories = ['All', 'Food', 'Kitchenware', 'Medicine', 'Toiletries', 'Cleaning Supplies']
+
 sslify = SSLify(app)
+admin_mail = os.environ.get('MAIL_USERNAME')
 
 @app.route("/")
 @app.route("/index")
@@ -63,6 +67,7 @@ def homecustomer():
     username = CASClient().authenticate()
         
     query = request.args.get('query')
+    # check the arguments, and then cookies for the category
     category = request.args.get('category')
 
     if query is None:
@@ -107,7 +112,7 @@ def homecustomer():
         db.session.commit()
     
     else:
-        item.quantity = item.quantity + int(quant)
+        item.quantity = int(quant)
         db.session.commit()
     
     addedMsg=''
@@ -125,7 +130,6 @@ def homecustomer():
     )
 
     response = make_response(html)
-
     return response
 
 @app.route("/homedeliver")
@@ -179,6 +183,15 @@ def cart():
 
     email = username.strip() + "@princeton.edu"
     cust = Customer.query.filter_by(email=email).first()
+
+    # change item quantity within cart (same as /homecustomer route)
+    itemid = request.args.get('added')
+    if itemid is not None:
+        item = CartItem.query.filter_by(Customer=cust, itemid=itemid).first()
+        quant = request.args.get('quantity')
+        if quant is not None:
+            item.quantity = int(quant)
+            db.session.commit()
 
     removed_id = request.args.get('removed_id')
     if removed_id is not None:
@@ -323,13 +336,14 @@ def placeorder():
             db.session.add(deliverer)
             db.session.commit()
 
-    canceled = request.args.get('canceled')
-    if canceled is not None:
-        removed_order = Order.query.filter_by(id=canceled).first()
-        if removed_order is not None:
-            print("removing order")
-            db.session.delete(removed_order)
-            db.session.commit()
+    # MOVED TO OWN ROUTE BELOW
+    # canceled = request.args.get('canceled')
+    # if canceled is not None:
+    #     removed_order = Order.query.filter_by(id=canceled).first()
+    #     if removed_order is not None:
+    #         print("removing order")
+    #         db.session.delete(removed_order)
+    #         db.session.commit()
 
     orders = Order.query.filter_by(Customer=cust).all()
     result = []
@@ -345,7 +359,42 @@ def placeorder():
             "deliverer": deliverer,
             "status": order.status,
         })
+
+
+    msg = Message("Order Placed!",
+        sender=admin_mail,
+        recipients=[cust.email])
+    msg.body = "Hello!\n\nYour order with TigerTask has been placed! Stay tuned for more updates. "
+    msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+    msg.body += "\n\nBest,\nTigerTask Team "
+    mail.send(msg)
+
     return render_template('orders.html', orders=result, status="All")
+
+@app.route("/cancelorder")
+def cancelorder():
+
+    username = CASClient().authenticate()
+    cust = Customer.query.filter_by(email=str(username.strip() + "@princeton.edu")).first()
+
+    canceled_order_id = request.args.get('order_id')
+    canceled_order = Order.query.filter_by(id=canceled_order_id).first()
+
+    if canceled_order is not None:
+        canceled_order_items = OrderItem.query.filter_by(Order=canceled_order).all()
+        for item in canceled_order_items:
+            db.session.delete(item)
+        db.session.delete(canceled_order)
+
+    db.session.commit()
+
+    # Flask refund
+
+    # Render some template
+
+
+
+
 
 @app.route("/claimorder")
 def claimorder():
@@ -359,6 +408,18 @@ def claimorder():
         order.status = "Being Delivered"
         order.Deliverer = deliv
         db.session.commit()
+
+        cust = order.Customer
+
+        msg = Message("Order Claimed!",
+            sender=admin_mail,
+            recipients=[cust.email])
+        msg.body = "Hello!\n\nGood news! Your order has been claimed. Your deliverer is "
+        msg.body += deliv.name + " and their phone number is " + deliv.phone_number + "."
+        msg.body += "\n\nOnce your order is delivered, make sure to confirm it under the 'Orders' page on tigertask.herokuapp.com."
+        msg.body += "\n\nBest,\nTigerTask Team"
+
+        mail.send(msg)
 
 
     orders = Order.query.filter_by(status="Waiting for Deliverer").all()
@@ -399,6 +460,23 @@ def orders():
             deliverer.balance += delivered.price
 
             db.session.commit()
+
+            # send an email noting successful delivery
+            msg = Message("Order Delivered!",
+                sender=admin_mail,
+                recipients=[cust.email])
+            msg.body = "Thank you for using TigerTask!. "
+            msg.body += "\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+            msg.body += "\n\nBest,\nTigerTask Team "
+            mail.send(msg)
+
+            msg = Message("Order Delivered!",
+                sender=admin_mail,
+                recipients=[deliverer.email])
+            msg.body = "Your customer marked his item as delivered. Thank your for your work!"
+            msg.body += "\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+            msg.body += "\n\nBest,\nTigerTask Team "
+            mail.send(msg)
 
     canceled = request.args.get('canceled')
     if canceled is not None:
@@ -444,32 +522,51 @@ def orderdetails():
     cust = Customer.query.filter_by(id=order.custid).first()
     orderitems = OrderItem.query.filter_by(Order=order)
 
-    # out_of_stock_id = request.args.get('out_of_stock_id')
-    # if out_of_stock_id is not None:
-    #     item 
+     # orderitem id of an item that is being marked out of stock
+    out_of_stock_id = request.args.get('out_of_stock_id')
+    if out_of_stock_id is not None:
+       orderItem = OrderItem.query.get(out_of_stock_id)
+       if orderItem:
+           orderItem.Item.inStock = "False" 
+           db.session.commit()
+
+     # orderitem id of an item that is being marked out of stock
+    in_stock_id = request.args.get('in_stock_id')
+    if in_stock_id is not None:
+       orderItem = OrderItem.query.get(in_stock_id)
+       if orderItem:
+           orderItem.Item.inStock = "True" 
+           db.session.commit()
 
     item_info = []
+    subtotal = 0
     for orderitem in orderitems:
 
-        item = Item.query.filter_by(id=orderitem.itemid).first()
+        item = orderitem.Item #Item.query.filter_by(id=orderitem.itemid).first()
         total_price = item.price * orderitem.quantity
 
         item_info.append({
+            "id": orderitem.id,
             "name": item.name,
             "total_price": total_price,
             "price": item.price,
             "quantity": orderitem.quantity,
+            "in_stock": item.inStock,
         })
+        subtotal += item.price * orderitem.quantity
 
-    order_info = []
-    order_info.append({
+    subtotal = '%.2f'%(subtotal)
+    
+    order_info = {
+        "id": order.id,
         "status": order.status,
         "building": order.building,
         "roomnum": order.roomnum,
         "note": order.note,
         "price": order.price,
         "time_placed": order.time_placed,
-    })
+        "delivererer": deliv.name,
+    }
 
     cust_info = []
     cust_info.append({
@@ -478,11 +575,55 @@ def orderdetails():
         "email": cust.email,
     })
 
-    return render_template('orderdetails.html', item_info=item_info, order_info=order_info, cust_info=cust_info)
+    return render_template('orderdetails.html', subtotal = subtotal, item_info=item_info, order=order_info, cust_info=cust_info)
 
 
 @app.route("/dashboard")
 def dashboard():
     username = CASClient().authenticate()
     deliverer = Deliverer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
-    return render_template('dashboard.html', subtotal=deliverer.balance)
+    customer = Customer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
+
+    message = ""
+
+    # get the phone number if edited
+    phone_number = request.args.get('phone')
+    if phone_number: 
+        customer.phone_number = phone_number
+        deliverer.phone_number = phone_number
+        db.session.add(deliverer)
+        db.session.add(customer)
+        message = "Your profile has been updated."
+     # get the venmo if edited
+    venmo = request.args.get('venmo')
+    if venmo:
+        deliverer.venmo = venmo
+        db.session.add(deliverer)
+        message = "Your profile has been updated."
+
+    return render_template('dashboard.html',message=message, person=deliverer, subtotal=deliverer.balance)
+
+@app.route("/account")
+def account():
+    username = CASClient().authenticate()
+    deliverer = Deliverer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
+    customer = Customer.query.filter_by(email=str(username.strip()+"@princeton.edu")).first()
+
+    message = ""
+
+    # get the phone number if edited
+    phone_number = request.args.get('phone')
+    if phone_number: 
+        customer.phone_number = phone_number
+        deliverer.phone_number = phone_number
+        db.session.add(deliverer)
+        db.session.add(customer)
+        message = "Your profile has been updated."
+     # get the venmo if edited
+    venmo = request.args.get('venmo')
+    if venmo:
+        deliverer.venmo = venmo
+        db.session.add(deliverer)
+        message = "Your profile has been updated."
+
+    return render_template('account.html',message=message, person=deliverer)

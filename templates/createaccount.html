@@ -1,35 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}Create an account{% endblock title %}
+{% block title %}Create an Account{% endblock title %}
 
 {% block content %}
-<div class="container d-flex flex-column full-page">
-    <div class="row mx-auto text-center mb-4">
-        <h2>Create an account</h2>
-    </div>
-    <div class="row mx-auto text-center mb-4">
-        <h5>{{errorMsg}}</h5>
-    </div>
-    <div class="row mx-auto text-center">
-        <form>
-            <div class="form-group form-label-align mb-4">
-                <label for="firstNameInput">First name</label>
-                <input type="text" name="firstname" class="form-control" id="firstNameInput" placeholder="John">
+<div class="container h-100">
+    <div class="row h-100">
+        <div class="col-sm-12 my-auto">
+            <h2 class="text-center mb-4">TigerTask User</h2>
+            <div class="card mx-auto" id="createAccount">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Create an Account</h5>
+                    <h6 class="card-subtitle font-weight-normal mb-3">{{errorMsg}}</h6>
+                    <form>
+                        <div class="form-group">
+                            <label for="firstNameInput">First name</label>
+                            <input type="text" name="firstname" class="form-control" id="firstNameInput" placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastNameInput">Last name</label>
+                            <input type="text" name="lastname" class="form-control" id="lastNameInput" placeholder="Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneInput">Phone number</label>
+                            <input type="text" name="phone" class="form-control" id="phoneInput" placeholder="123-456-7890">
+                        </div>
+                        <div class="form-group">
+                            <label for="venmoInput">Venmo</label>
+                            <input type="text" name="venmo" class="form-control" id="venmoInput" placeholder="@John-Doe">
+                        </div>
+                        <div class="d-flex">
+                            <button type="submit" class="btn btn-primary flex-fill">Submit</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group form-label-align mb-4">
-                <label for="lastNameInput">Last name</label>
-                <input type="text" name="lastname" class="form-control" id="lastNameInput" placeholder="Doe">
-            </div>
-            <div class="form-group form-label-align mb-4">
-                <label for="phoneInput">Phone number</label>
-                <input type="text" name="phone" class="form-control" id="phoneInput" placeholder="123-456-7890">
-            </div>
-            <div class="form-group form-label-align mb-4">
-                <label for="venmoInput">Venmo</label>
-                <input type="text" name="venmo" class="form-control" id="venmoInput" placeholder="@John-Doe">
-            </div>
-            <button type="submit" class="btn btn-primary mt-2">Submit</button>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock content %}

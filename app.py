@@ -10,9 +10,25 @@ from flask_admin import Admin
 from flask_mail import Mail
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'tigertask.sqlite')
+database_uri = 'sqlite:///' + os.path.join(basedir, 'tigertask.sqlite')
+
+app.config.update(
+
+	# DB SETTINGS
+	SQLALCHEMY_TRACK_MODIFICATIONS = False,
+	SQLALCHEMY_DATABASE_URI = database_uri,
+
+	# EMAIL SETTINGS
+	MAIL_SERVER = 'smtp.gmail.com',
+	MAIL_PORT = 465,
+	MAIL_USE_TLS = False,
+	MAIL_USE_SSL = True,
+	MAIL_USERNAME = os.environ.get('MAIL_USERNAME'),
+	MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+	
+	)
+
 db = SQLAlchemy(app)
 admin = Admin(app)
 mail = Mail(app)
