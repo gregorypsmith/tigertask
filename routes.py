@@ -601,7 +601,7 @@ def orderdetails():
 
     deliverer_fee = '%.2f'%(order.price - subtotal)
     subtotal = '%.2f'%(subtotal)
-    total = '%.2f'%(total)
+    total = '%.2f'%(order.price)
     
     order_info = {
         "id": order.id,
