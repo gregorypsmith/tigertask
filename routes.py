@@ -88,6 +88,7 @@ def homecustomer():
             "name": item.name,
             "price": item.price,
             "category": item.category,
+            "in_stock": item.inStock,
         })
 
     # add this item to the cartitems page
