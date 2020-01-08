@@ -6,7 +6,8 @@ from flask_admin.contrib.sqla import ModelView
 
 class Customer(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.Unicode)
+	first_name = db.Column(db.Unicode)
+	last_name = db.Column(db.Unicode)
 	phone_number = db.Column(db.Unicode)
 	email = db.Column(db.Unicode)
 	venmo = db.Column(db.Unicode)
@@ -15,7 +16,8 @@ class Customer(db.Model):
 
 class Deliverer(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.Unicode)
+	first_name = db.Column(db.Unicode)
+	last_name = db.Column(db.Unicode)
 	phone_number = db.Column(db.Unicode)
 	email = db.Column(db.Unicode)
 	venmo = db.Column(db.Unicode)
