@@ -1,6 +1,6 @@
 from app import app, db, mail
 from database import Customer, Deliverer, CartItem, Order, OrderItem, Item
-from flask import render_template, request, make_response, redirect
+from flask import render_template, request, make_response, redirect, url_for
 from flask_mail import Message
 from flask_sslify import SSLify
 from CASClient import CASClient
@@ -648,7 +648,7 @@ def dashboard():
 
         if not re.search(PHONE_REGEXP, phone_number):
            return render_template('account.html',message="", person=deliverer, error="Failed to update profile. Please provide a US number of the form xxx-xxx-xxxx")
-        
+
         # update customer table
         customer.first_name = first_name
         customer.last_name = last_name
