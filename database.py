@@ -9,6 +9,7 @@ class Customer(db.Model):
 	name = db.Column(db.Unicode)
 	phone_number = db.Column(db.Unicode)
 	email = db.Column(db.Unicode)
+	venmo = db.Column(db.Unicode)
 	orders = db.relationship('Order', backref='Customer')
 	cartitems = db.relationship('CartItem', backref='Customer')
 
