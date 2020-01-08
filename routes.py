@@ -393,24 +393,7 @@ def claimorder():
         msg.body += "\n\nBest,\nTigerTask Team"
         mail.send(msg)
 
-
-    orders = Order.query.filter_by(status="Waiting for Deliverer").all()
-
-    results = []
-    for order in orders:
-        cust = Customer.query.filter_by(id=order.custid).first()
-        results.append({
-            "id": order.id,
-            "name": "%s %s" % (order.Customer.first_name, order.Customer.last_name),
-            "phone_number": cust.phone_number,
-            "building": order.building,
-            "roomnum": order.roomnum,
-            "price": order.price,
-            "time_placed": order.time_placed,
-            "status": order.status,
-        })
-
-    return render_template('deliveries.html', results=results)
+    return redirect(url_for('deliveries'))
 
 @app.route("/orders")
 def orders():
