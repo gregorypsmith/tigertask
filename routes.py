@@ -148,7 +148,7 @@ def homedeliver():
         cust = Customer.query.filter_by(id=order.custid).first()
         results.append({
             "id": order.id,
-            "name": "%s %s" % (cust.first_name, cust.first_name),
+            "name": "%s %s" % (cust.first_name, cust.last_name),
             "phone_number": cust.phone_number,
             "building": order.building,
             "roomnum": order.roomnum,
@@ -574,18 +574,27 @@ def dashboard():
     message = ""
 
     # get the phone number if edited
+    first_name = request.args.get('first_name')
+    last_name = request.args.get('last_name')
     phone_number = request.args.get('phone')
-    if phone_number: 
+    venmo = request.args.get('venmo')
+    if first_name and last_name and phone_number and venmo:
+        # update customer table
+        customer.first_name = first_name
+        customer.last_name = last_name
         customer.phone_number = phone_number
+        customer.venmo = venmo
+        
+        # update deliverer table
+        deliverer.first_name = first_name
+        deliverer.last_name = last_name
         deliverer.phone_number = phone_number
+        deliverer.venmo = venmo
+
+        # save 
         db.session.add(deliverer)
         db.session.add(customer)
-        message = "Your profile has been updated."
-     # get the venmo if edited
-    venmo = request.args.get('venmo')
-    if venmo:
-        deliverer.venmo = venmo
-        db.session.add(deliverer)
+        db.session.commit()
         message = "Your profile has been updated."
 
     return render_template('dashboard.html',message=message, person=deliverer, subtotal=deliverer.balance)
@@ -600,7 +609,7 @@ def account():
 
     # get the phone number if edited
     first_name = request.args.get('first_name')
-    last_name = request.args.get("last_name")
+    last_name = request.args.get('last_name')
     phone_number = request.args.get('phone')
     venmo = request.args.get('venmo')
     if first_name and last_name and phone_number and venmo:
