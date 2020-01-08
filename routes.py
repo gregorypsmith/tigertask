@@ -229,7 +229,7 @@ def cart():
             })
             subtotal += item.price * cart_item.quantity
 
-        fee = max(2.00, 0.17 * subtotal)
+        fee = max(1.99, 0.17 * subtotal)
     
     total = '%.2f'%(subtotal + fee)
     subtotal = '%.2f'%(subtotal)
@@ -274,7 +274,7 @@ def pay():
         'name': 'Confirm Order',
         'description': '''We will get these items to you in a jif! 
         For testing you will be charged $0.50''',
-        'images': ['http://cdn.shopify.com/s/files/1/2031/4491/files/ustore-logo_e9232cd4-4d9c-4c26-a795-56ea59c4796d.png?v=1542942470'],
+        'images': ['https://pbs.twimg.com/profile_images/685549530771800064/dR3EZHkC_400x400.png'],
         'amount': int(float(total) * 100),
         'currency': 'usd',
         'quantity': 1,
@@ -299,12 +299,7 @@ def placeorder():
         if item is not None:
             subtotal += item.price * cart_item.quantity
 
-        if subtotal > 0:
-            fee = 1.99
-        if subtotal > 10:
-            fee = 2.99
-        if subtotal > 25:
-            fee = 3.99
+        fee = max(1.99, 0.17 * subtotal)
     
     total = '%.2f'%(subtotal + fee)
     building = request.args.get('building')
@@ -391,7 +386,6 @@ def claimorder():
         msg.body += deliv.first_name + " " + deliv.last_name + " and their phone number is " + deliv.phone_number + "."
         msg.body += "\n\nOnce your order is delivered, make sure to confirm it under the 'Orders' page on tigertask.herokuapp.com."
         msg.body += "\n\nBest,\nTigerTask Team"
-
         mail.send(msg)
 
 
@@ -519,10 +513,36 @@ def orderdetails():
      # orderitem id of an item that is being marked out of stock
     out_of_stock_id = request.args.get('out_of_stock_id')
     if out_of_stock_id is not None:
-       orderItem = OrderItem.query.get(out_of_stock_id)
-       if orderItem:
-           orderItem.Item.inStock = "False" 
-           db.session.commit()
+        orderItem = OrderItem.query.get(out_of_stock_id)
+        item = orderItem.Item
+        total_price = orderItem.quantity * item.price
+
+        msg = Message("Item Out of Stock",
+                sender=admin_mail,
+                recipients=[cust.email])
+        msg.body = "Hello!"
+        msg.body += "\n\nUnfortunately, one of the items you ordered is out of stock."
+        msg.body += "\n\nItem Name: " + item.name
+        msg.body += "\nQuantity: " + str(orderItem.quantity)
+        msg.body += "\nTotal Price: " + str(total_price)
+        msg.body += "\n\nYou will receive a Venmo refund with the amount paid for this item within 24 hours. The rest of your order is still on the way. We apologize for the inconvenience!"
+        msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+        msg.body += "\n\nBest,\nTigerTask Team"
+        mail.send(msg)
+
+        msg = Message("Item Out of Stock",
+                sender=admin_mail,
+                recipients=[admin_mail])
+        msg.body = "A customer has an item out of stock."
+        msg.body += "\n\nVenmo: " + cust.venmo
+        msg.body += "\nAmount: " + str(total_price)
+        mail.send(msg)
+
+        if orderItem:
+            orderItem.Item.inStock = "False" 
+            orderItem.Order.price = orderItem.Order.price - total_price
+            db.session.delete(orderItem)
+            db.session.commit()
 
      # orderitem id of an item that is being marked out of stock
     in_stock_id = request.args.get('in_stock_id')
@@ -549,6 +569,7 @@ def orderdetails():
         })
         subtotal += item.price * orderitem.quantity
 
+    deliverer_fee = '%.2f'%(order.price - subtotal)
     subtotal = '%.2f'%(subtotal)
     
     order_info = {
@@ -571,7 +592,7 @@ def orderdetails():
         "email": cust.email,
     })
 
-    return render_template('orderdetails.html', subtotal = subtotal, item_info=item_info, order=order_info, cust_info=cust_info)
+    return render_template('orderdetails.html', subtotal = subtotal, deliverer_fee = deliverer_fee, item_info=item_info, order=order_info, cust_info=cust_info)
 
 
 @app.route("/dashboard")
