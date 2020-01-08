@@ -518,7 +518,11 @@ def orderdetails():
         item = orderitem.Item
         total_price = orderitem.quantity * item.price
 
-        if len(orderitems) == 0:
+        i = 0
+        for orderitem in orderitems:
+            i++
+
+        if i == 0:
             msg = Message("Item Out of Stock",
                     sender=admin_mail,
                     recipients=[cust.email])
