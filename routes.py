@@ -11,6 +11,7 @@ import os
 import re
 
 PHONE_REGEXP = "^[0-9]{10}$|^[0-9]{3}-[0-9]{3}-[0-9]{4}$"
+VENMO_REGEXP = "@.*"
 
 BEING_DELIVERED = "Being Delivered"
 DELIVERED = "Delivered"
@@ -44,10 +45,12 @@ def createaccount():
     phone = request.args.get('phone')
     venmo = request.args.get('venmo')
 
-    if not fname and not lname and not phone:
+    if not fname and not lname and not phone and not venmo:
         return render_template('createaccount.html', errorMsg="")
-    elif not fname or not lname or not phone:
-        return render_template('createaccount.html', errorMsg="Missing first/last name, phone or venmo.")
+    elif not fname or not lname or not phone or not venmo:
+        return render_template('createaccount.html', errorMsg="Missing first/last name, phone and/or venmo.")
+    elif not re.search(VENMO_REGEXP, venmo):
+        return render_template('createaccount.html', errorMsg="Invalid venmo. Venmo must start with the '@' character.")
     elif not re.search(PHONE_REGEXP, phone):
         return render_template('createaccount.html', errorMsg="Invalid phone number. Number must be US number of the form xxx-xxx-xxxx")
 
@@ -646,7 +649,9 @@ def dashboard():
     venmo = request.args.get('venmo')
     if first_name and last_name and phone_number and venmo:
 
-        if not re.search(PHONE_REGEXP, phone_number):
+        if not re.search(VENMO_REGEXP, venmo):
+            return render_template('dashboard.html',message="", person=deliverer, error="Failed to update profile. Venmo must start with the '@' character.")
+        elif not re.search(PHONE_REGEXP, phone_number):
            return render_template('dashboard.html',message="", person=deliverer, error="Failed to update profile. Please provide a US number of the form xxx-xxx-xxxx")
 
         # update customer table
@@ -685,7 +690,9 @@ def account():
     venmo = request.args.get('venmo')
     if first_name and last_name and phone_number and venmo:
 
-        if not re.search(PHONE_REGEXP, phone_number):
+        if not re.search(VENMO_REGEXP, venmo):
+            return render_template('account.html',message="", person=customer, error="Failed to update profile. Venmo must start with the '@' character.")
+        elif not re.search(PHONE_REGEXP, phone_number):
             return render_template('account.html',message="", person=customer, error="Failed to update profile. Please provide a US number of the form xxx-xxx-xxxx")
 
         # update customer table
