@@ -234,6 +234,7 @@ def cart():
     
     total = '%.2f'%(subtotal + fee)
     subtotal = '%.2f'%(subtotal)
+    fee = '%.2f'%(fee)
 
     buildfile = open(r"buildings.txt", "r")
     buildings = []
@@ -522,7 +523,7 @@ def orderdetails():
         for orderitem in orderitems:
             i += 1
 
-        if i == 0:
+        if i == 1:
             msg = Message("Item Out of Stock",
                     sender=admin_mail,
                     recipients=[cust.email])
