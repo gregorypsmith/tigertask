@@ -481,16 +481,16 @@ def orders():
 
     canceled = request.args.get('canceled')
     if canceled is not None:
+        removed_order = Order.query.filter_by(id=canceled).first()
 
         msg = Message("Cancellation Requested",
                 sender=admin_mail,
                 recipients=[admin_mail])
-            msg.body = "A customer has requested a cancellation to their order.\n\n"
-            msg.body += "Venmo: " + customer.venmo + "\n"
-            msg.body += "Phone Number: " + customer.phone_number
-            mail.send(msg)
+        msg.body = "A customer has requested a cancellation to their order.\n\n"
+        msg.body += "Venmo: " + customer.venmo + "\n"
+        msg.body += "Amount: " + removed_order.price
+        mail.send(msg)
 
-        removed_order = Order.query.filter_by(id=canceled).first()
         if removed_order is not None:
             print("removing order")
             canceled_order_items = OrderItem.query.filter_by(Order=removed_order).all()

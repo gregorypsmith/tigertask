@@ -43,7 +43,6 @@ class Order(db.Model):
 	note = db.Column(db.Unicode)
 	price = db.Column(db.Integer)
 	time_placed = db.Column(db.Unicode)
-	charge_id = db.Column(db.Unicode)
 
 	orderitems = db.relationship('OrderItem', backref='Order')
 
