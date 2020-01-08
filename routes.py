@@ -47,6 +47,7 @@ def createaccount():
     newcust = Customer(
         name=str(fname + ' ' + lname), 
         phone_number=phone, 
+        venmo=venmo,
         email=str(username.strip() + "@princeton.edu"))
     newdeliv = Deliverer(
         name=str(fname + ' ' + lname), 
@@ -464,9 +465,9 @@ def orders():
             # send an email noting successful delivery
             msg = Message("Order Delivered!",
                 sender=admin_mail,
-                recipients=[cust.email])
-            msg.body = "Thank you for using TigerTask!. "
-            msg.body += "\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
+                recipients=[customer.email])
+            msg.body = "Thank you for using TigerTask!"
+            msg.body += "\n\nIf you have any questions, feel free to email us at tigertask.princeton@gmail.com."
             msg.body += "\n\nBest,\nTigerTask Team "
             mail.send(msg)
 
@@ -481,10 +482,27 @@ def orders():
     canceled = request.args.get('canceled')
     if canceled is not None:
         removed_order = Order.query.filter_by(id=canceled).first()
+
+        msg = Message("Cancellation Requested",
+                sender=admin_mail,
+                recipients=[admin_mail])
+        msg.body = "A customer has requested a cancellation to their order.\n\n"
+        msg.body += "Venmo: " + customer.venmo + "\n"
+        msg.body += "Amount: " + removed_order.price
+        mail.send(msg)
+
         if removed_order is not None:
             print("removing order")
+            canceled_order_items = OrderItem.query.filter_by(Order=removed_order).all()
+            for item in canceled_order_items:
+                db.session.delete(item)
             db.session.delete(removed_order)
             db.session.commit()
+
+
+
+
+
 
     status = request.args.get('status')
     if status is None or status == 'All':
