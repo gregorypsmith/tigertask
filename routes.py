@@ -561,7 +561,7 @@ def orderdetails():
             mail.send(msg)
 
             orderitem.Item.inStock = "False"
-            order.price = order.price - total_price
+            orderitem.Order.price = orderitem.Order.price - total_price
             db.session.delete(orderitem)
             db.session.commit()
 
