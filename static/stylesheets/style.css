@@ -19,3 +19,7 @@ input:read-only.read-only-white {
 #createAccount {
    max-width: max-content;
 }
+
+.btn-fill {
+    width: 100%;
+}

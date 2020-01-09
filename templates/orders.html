@@ -63,12 +63,13 @@
                                 <input type="hidden" name="delivered" value="True">
                                 <input type="hidden" name="delivered_id" value="{{order.id}}">
                                 <div class="d-flex mb-2">
-                                    <button class="btn btn-secondary flex-fill" disabled>Cancel order</button>
+                                    <span class="d-inline-block flex-fill" tabindex="0" data-toggle="tooltip" title="Your order is being delivered and cannot be cancelled.">
+                                        <button class="btn btn-danger btn-fill" style="pointer-events: none;" type="button" disabled>Cancel order</button>
+                                    </span>
                                 </div>
                                 <div class="d-flex">
                                     <button class="btn btn-success flex-fill" type="submit">Confirm delivery</button>
                                 </div>
-                                <p style='font-size: 11px'>Your order is being delivered and cannot be cancelled.</p>
                             </form>
                             {% endif %}
                         </div>
