@@ -506,7 +506,7 @@ def orderdetails():
         total_price = orderitem.quantity * item.price
 
         i = 0
-        for orderitem in orderitems:
+        for orderitem_count in orderitems:
             i += 1
 
         if i == 1:
