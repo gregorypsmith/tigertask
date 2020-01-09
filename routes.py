@@ -578,12 +578,10 @@ def orderdetails():
     for orderitem in orderitems:
 
         item = orderitem.Item #Item.query.filter_by(id=orderitem.itemid).first()
-        total_price = item.price * orderitem.quantity
 
         item_info.append({
             "id": orderitem.id,
             "name": item.name,
-            "total_price": total_price,
             "price": item.price,
             "quantity": orderitem.quantity,
             "in_stock": item.inStock,
