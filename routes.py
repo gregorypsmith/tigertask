@@ -258,7 +258,7 @@ def about():
 def pay():
 
     username = CASClient().authenticate()
-    stripe.api_key = os.environ.get('SECRET_KEY')
+    stripe.api_key = os.environ.get('TEST_SECRET_KEY')
 
     total = request.args.get('total')
     building = request.args.get('building')
