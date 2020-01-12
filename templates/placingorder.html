@@ -4,7 +4,7 @@
 <h1>Placing your order...</h1>
 <script>
     function payNow(){
-        var stripe = Stripe('pk_live_0jpKIE7HOHebb0fC8LDbDfuS00I1h5HaVI');
+        var stripe = Stripe(os.environ.get('TEST_PUBLISHABLE_KEY'));
             
         stripe.redirectToCheckout({
             sessionId: '{{sessionid}}'
