@@ -5,6 +5,7 @@ from flask_mail import Message
 from flask_sslify import SSLify
 from CASClient import CASClient
 from datetime import datetime
+from pytz import timezone
 import stripe
 import urllib
 import os 
@@ -320,8 +321,8 @@ def placeorder():
     roomnum = request.args.get('roomnum')
     note = request.args.get('note')
 
-    now = datetime.now()
-    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    now = datetime.now(timezone('US/Eastern'))
+    dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
 
     # prevents adding order multiple times when refreshing
     if fee > 0:
