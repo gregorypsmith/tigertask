@@ -367,7 +367,7 @@ def placeorder():
         })
 
 
-    msg = Message("Order Placed!",
+    msg = Message("Order #" + str(order.id) + " Placed!",
         sender=admin_mail,
         recipients=[cust.email])
     msg.body = "Hello!\n\nYour order with TigerTask has been placed! Stay tuned for more updates. "
@@ -393,7 +393,7 @@ def claimorder():
 
         cust = order.Customer
 
-        msg = Message("Order Claimed!",
+        msg = Message("Order #" + str(id) + " Claimed!",
             sender=admin_mail,
             recipients=[cust.email])
         msg.body = "Hello!\n\nGood news! Your order has been claimed. Your deliverer is "
@@ -426,7 +426,7 @@ def orders():
             db.session.commit()
 
             # send an email noting successful delivery
-            msg = Message("Order Delivered!",
+            msg = Message("Order #" + str(deliv_id) + " Delivered!",
                 sender=admin_mail,
                 recipients=[customer.email])
             msg.body = "Thank you for using TigerTask!"
@@ -434,7 +434,7 @@ def orders():
             msg.body += "\n\nBest,\nTigerTask Team "
             mail.send(msg)
 
-            msg = Message("Order Delivered!",
+            msg = Message("Order #" + str(deliv_id) + " Delivered!",
                 sender=admin_mail,
                 recipients=[deliverer.email])
             msg.body = "Your customer marked his item as delivered. Thank your for your work!"
@@ -454,7 +454,7 @@ def orders():
         msg.body += "Amount: " + str(removed_order.price)
         mail.send(msg)
 
-        msg = Message("Order Cancelled",
+        msg = Message("Order #" + str(canceled) + " Cancelled",
                 sender=admin_mail,
                 recipients=[customer.email])
         msg.body = "Hello!"
@@ -523,7 +523,7 @@ def orderdetails():
                     sender=admin_mail,
                     recipients=[cust.email])
             msg.body = "Hello!"
-            msg.body += "\n\nUnfortunately, the item that you purchased is out of stock."
+            msg.body += "\n\nUnfortunately, the item that you purchased for order #" + str(id) + " is out of stock."
             msg.body += "\n\nItem Name: " + item.name
             msg.body += "\nQuantity: " + str(orderitem.quantity)
             msg.body += "\nOrder Total: " + str(order.price)
@@ -552,7 +552,7 @@ def orderdetails():
                     sender=admin_mail,
                     recipients=[cust.email])
             msg.body = "Hello!"
-            msg.body += "\n\nUnfortunately, one of the items you ordered is out of stock."
+            msg.body += "\n\nUnfortunately, one of the items you purchased for order #" + str(id) + " is out of stock."
             msg.body += "\n\nItem Name: " + item.name
             msg.body += "\nQuantity: " + str(orderitem.quantity)
             msg.body += "\nTotal Price: " + str(total_price)
