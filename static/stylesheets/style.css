@@ -16,7 +16,7 @@ input:read-only.read-only-white {
     background-color: #fff;
 }
 
-#createAccount {
+.max-width-content {
    max-width: max-content;
 }
 
