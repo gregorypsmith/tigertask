@@ -10,7 +10,7 @@ import urllib
 import os 
 import re
 
-PHONE_REGEXP = "^[0-9]{10}$|^[0-9]{3}-[0-9]{3}-[0-9]{4}$"
+PHONE_REGEXP = "^[0-9]{10}$"
 VENMO_REGEXP = "@.*"
 
 BEING_DELIVERED = "Being Delivered"
@@ -52,7 +52,16 @@ def createaccount():
     elif not re.search(VENMO_REGEXP, venmo):
         return render_template('createaccount.html', errorMsg="Invalid venmo. Venmo must start with the '@' character.")
     elif not re.search(PHONE_REGEXP, phone):
-        return render_template('createaccount.html', errorMsg="Invalid phone number. Number must be US number of the form xxx-xxx-xxxx")
+        return render_template('createaccount.html', errorMsg="Invalid phone number. Number must be US number of the form xxxxxxxxxx.")
+    
+    phoneCheck = Customer.query.filter_by(phone_number=phone)
+    venmoCheck = Customer.query.filter_by(venmo=venmo)
+
+    if phoneCheck.first():
+        return render_template('createaccount.html', errorMsg="A user has already registered with this phone number.")
+    if venmoCheck.first():
+        return render_template('createaccount.hml', errorMsg="A user has already registered with this Venmo handle.")
+
 
     newcust = Customer(
         first_name=fname,
