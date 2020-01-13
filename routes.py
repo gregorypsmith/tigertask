@@ -451,7 +451,7 @@ def orders():
                 recipients=[admin_mail])
         msg.body = "A customer has requested a cancellation to their order.\n\n"
         msg.body += "Venmo: " + customer.venmo + "\n"
-        msg.body += "Amount: " + removed_order.price
+        msg.body += "Amount: " + str(removed_order.price)
         mail.send(msg)
 
         msg = Message("Order Cancelled",
