@@ -5,8 +5,16 @@
 {% block content %}
 {% include 'navbarcustomer.html' %}
 
-
 <div class="container">
+    {% if total == "0.00" %}
+    <div class='text-center'>
+        <br>
+        <br>
+        <h5>Your cart is empty! Browse the U-Store's selection to add items now.</h5>
+        <br>
+        <a href="/homecustomer" class="btn btn-primary home-btn">Browse items</a>
+    </div>
+    {% else %}
     <h4 class="mb-4">My Cart</h4>
     <div class="row">
         <div class="col-md-4 col-lg-3">
@@ -110,5 +118,6 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock content %}

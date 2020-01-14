@@ -642,7 +642,7 @@ def dashboard():
         if not re.search(VENMO_REGEXP, venmo):
             return render_template('dashboard.html',message="", person=deliverer, error="Failed to update profile. Venmo must start with the '@' character.")
         elif not re.search(PHONE_REGEXP, phone_number):
-           return render_template('dashboard.html',message="", person=deliverer, error="Failed to update profile. Please provide a US number of the form xxx-xxx-xxxx")
+           return render_template('dashboard.html',message="", person=deliverer, error="Failed to update profile. Please provide a US number of the form xxxxxxxxxx.")
 
         # update customer table
         customer.first_name = first_name
@@ -682,7 +682,7 @@ def account():
         if not re.search(VENMO_REGEXP, venmo):
             return render_template('account.html',message="", person=customer, error="Failed to update profile. Venmo must start with the '@' character.")
         elif not re.search(PHONE_REGEXP, phone_number):
-            return render_template('account.html',message="", person=customer, error="Failed to update profile. Please provide a US number of the form xxx-xxx-xxxx")
+            return render_template('account.html',message="", person=customer, error="Failed to update profile. Please provide a US number of the form xxxxxxxxxx.")
 
         # update customer table
         customer.first_name = first_name
