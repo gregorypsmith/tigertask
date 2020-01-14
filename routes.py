@@ -281,14 +281,13 @@ def pay():
     print()
 
     # for testing payments when debugging
-    total = 0.50
     session = stripe.checkout.Session.create(
     customer_email=str(username.strip() + '@princeton.edu'),
     payment_method_types=['card'],
     line_items=[{
         'name': 'Confirm Order',
         'description': '''We will get these items to you in a jif! 
-        For testing you will be charged $0.50''',
+        This is a test payment, so no card is actually being charged.''',
         'images': ['https://pbs.twimg.com/profile_images/685549530771800064/dR3EZHkC_400x400.png'],
         'amount': int(float(total) * 100),
         'currency': 'usd',
