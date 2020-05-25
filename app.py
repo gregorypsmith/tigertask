@@ -11,13 +11,14 @@ from flask_mail import Mail
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
+database_uri_postgres = 'postgres://cvcpylyugwdnwt:8ee8510d9a25f68c30514e002dada5934d4bdbef06595f01e4b002fffc6b38da@ec2-54-204-39-43.compute-1.amazonaws.com:5432/d90r5mu72ko8a3'
 database_uri = 'sqlite:///' + os.path.join(basedir, 'tigertask.sqlite')
 
 app.config.update(
 
 	# DB SETTINGS
 	SQLALCHEMY_TRACK_MODIFICATIONS = False,
-	SQLALCHEMY_DATABASE_URI = database_uri,
+	SQLALCHEMY_DATABASE_URI = database_uri_postgres,
 
 	# EMAIL SETTINGS
 	MAIL_SERVER = 'smtp.gmail.com',
