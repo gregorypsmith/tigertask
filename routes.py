@@ -10,6 +10,7 @@ import stripe
 import urllib
 import os 
 import re
+from models import Result
 
 PHONE_REGEXP = "^[0-9]{10}$"
 VENMO_REGEXP = "@.*"
